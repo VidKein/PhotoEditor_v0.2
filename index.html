@@ -16,18 +16,18 @@
       padding: 0;
     }
     /*Switch menu*/
-    article ul {
+    .editBlock ul {
     margin-top: 5px;    
     padding: 0 5px 0;
     margin-bottom: -1px;
     overflow: hidden;
     }
-    article li {
+    .editBlock li {
     float:left;
     list-style: none;
     margin: 0 2px;
     }
-    article li abbr {
+    .editBlock li abbr {
       display: block;
       padding: 4px 8px;
       background: #F7F7F7;
@@ -37,7 +37,7 @@
       cursor: pointer;
       text-decoration: none;        
     }
-    article .content {
+    .editFoto [name = content]{
       clear: both;
       display: none;
       border: 1px solid #cccccc;
@@ -47,7 +47,7 @@
       overflow: auto;
       padding: 5px;
     }
-    #dimension{
+    #resize{
       text-align: center;
     }
 
@@ -71,8 +71,10 @@
       clip-path: polygon(0% 0%, var(--value) 0%, var(--value) 100%, 0% 100%);
     }
     #canvasResult{
+      display: none;
       /*Вид отображения результата*/
       clip-path: polygon(100% 0%, var(--value) 0%, var(--value) 100%, 100% 100%);
+      background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"%3E%3Cg fill="%239C92AC" fill-opacity="0.4"%3E%3Cpath fill-rule="evenodd" d="M0 0h4v4H0V0zm4 4h4v4H4V4z"/%3E%3C/g%3E%3C/svg%3E');
     } 
            
     /*Функционал*/
@@ -88,7 +90,7 @@
       height: 0.5rem;
       border-top: 2px solid rgba(0,0,0,.3);
     } 
-    .activeFunctiom{
+    .activeFunction{
       background-color: rgba(255, 0, 0, 0.418);
     }
     /*Регулятор отображения изменений -  main*/    
@@ -286,81 +288,85 @@
 
         <canvas id="canvasHistogram" width="256" height="150"></canvas>
         <p>For select custom image:</p>
-        <input id="inputPhoto" type="file" />
-        <div class="editFoto">
-            <article>
+        <input id="inputPhoto" type="file"/>
                   <h3>Edit photo</h3>
                     <ul>
-                      <li><abbr class="links" onclick="openMenu(event, 'main')" id="mains" title="main">Main</abbr></li>
-                      <li><abbr class="links" onclick="openMenu(event, 'dimension')" id="dimensions" title="dimensions">Dimensions</abbr></li>
-                      <li><abbr class="links" onclick="openMenu(event, 'rotation')" id="rotations" title="rotation">Rotation</abbr></li>                  
+                      <li><abbr class="links" onclick="openMenu(event, 'editColor')" id="startEditColor" title="edit color">Color</abbr></li>
+                      <li><abbr class="links" onclick="openMenu(event, 'resize')"  title="resize">Resiz</abbr></li>
+                      <li><abbr class="links" onclick="openMenu(event, 'rotate')" title="rotate">Rotate</abbr></li>                  
                     </ul>
-                  <div class="content" id="main">                          
-                    <p>Brightness</p>
-                      <div>            
+                  <div class="editFoto" id="editFoto">  
+
+                    <div class="editColor" id="editColor" name="content">     
+
+                      <div class="links" id="contrast">
+                        <p>Contrast</p>
                         <label>
-                          <input id="Brightness" type="range" name="range" min="-255" max="255" value="0" />        
-                          <input id="valueBrightness" type="number" name="number" min="-255" max="255" value="0"/>                            
+                          <input id="rangeContrast" type="range" name="contrast" min="-255" max="255" value="0" /> 
+                          <input id="valueContrast" type="number" name="number" min="-255" max="255" value="0"/>   
                         </label>
                       </div>
-                      <p>Contrast</p>
-                      <div>
+                      
+                      <div class="links" id="brightness">
+                        <p>Brightness</p>
                         <label>
-                          <input id="Contrast" type="range" name="range" min="-255" max="255" value="0"/>
-                          <input id="valueContrast" type="number" name="number" min="-255" max="255" value="0"/>              
+                          <input id="rangeBrightness" type="range" name="brightness" min="-255" max="255" value="0" />
+                          <input id="valueBrightness" type="number" name="number" min="-255" max="255" value="0"/>    
                         </label>
                       </div>
-                        <hr>
+                      <hr>
+                    
+                      <div class="links" id="saturation">
                         <p>Saturation</p>
-                      <div>
                         <label>
-                          <input id="Saturation" type="range"  name="range" min="-255" max="255" value="0" />
-                          <input id="valueSaturation" type="number" name="number" min="-255" max="255" value="0"/>                
-                        </label>  
+                          <input id="rangeSaturation" type="range"  name="saturation" min="-255" max="255" value="0" />
+                          <input id="valueSaturation" type="number" name="number" min="-255" max="255" value="0"/>  
+                        </label>                
                       </div>
-                        <hr>
+                      <hr>
+              
+                      <div class="links" id="sharp">
                         <p>Sharp</p>
-                      <div>
                         <label>
-                          <input id="Sharp" type="range"  name="range" min="0.1" max="100" step="0.01" value="0" />
-                          <input id="valueSharp" type="number" name="number" min="0.1" max="100" step="1" value="0"/>
-                        </label>  
+                          <input id="rangeSharp" type="range"  name="sharp" min="0" max="100" step="0.01" value="0" /> 
+                          <input id="valueSharp" type="number" name="number" min="0.1" max="100" step="1" value="0"/>          
+                        </label>
                       </div>
-                  </div>
-                
-                  <div class="content" id="dimension">       
-                    <p>Resize:</p>
-                    <div id="inputScale">
-                      <input id="numWidth" type="number" name="rangeScale" value=""/>x<input class="closet" id="numHeight" type="number" name="rangeScale" value="" disabled/>
+
                     </div>
-                    <div>
-                      <label>
-                        <input id="cbProportions" type="checkbox" checked/>Proportions
-                      </label>
+                  
+                    <div class="links" id="resize" name="content">       
+                        <p>Resize:</p>
+                        <label id="inputScale">
+                          <input id="numWidth" type="number" name="resiz" value="0"/>x<input class="closet" id="numHeight" type="number" name="resiz" value="0" disabled/>
+                        </label>
+                        <div>
+                          <label>
+                            <input id="cbProportions" type="checkbox" checked/>Proportions
+                          </label>
+                        </div>
+                        <div>
+                          <p>Scale methods:</p>
+                          <select name="scaleVersion" id="scaleVersion" size="1">
+                            <option value="neighbor" selected>Nearest neighbor scaling</option>
+                            <option value="bilinear">Bilinear scaling</option>
+                            <option value="lanczos">Lanczos scaling</option>
+                          </select>    
+                        </div>
                     </div>
-                    <div>
-                      <p>Scale methods:</p>
-                      <select name="scaleVersion" id="scaleVersion" size="1">
-                        <option value="neighbor" selected>Nearest neighbor scaling</option>
-                        <option value="bilinear">Bilinear scaling</option>
-                        <option value="lanczos">Lanczos scaling</option>
-                      </select>    
+                  
+                    <div class="rotate" id="rotate" name="content">
+                      <p>Rotate</p>
+                      <div class="radioBlock" id="radioBlock">
+                        <p><input type="radio" name="rotate" id="0" min="0" value="0" title="rotate 0deg" checked> - 0&#176;</p>
+                        <p><input type="radio" name="rotate" id="90l" value="90" title="rotate 90deg left"> - 90&#176;</p>
+                        <p><input type="radio" name="rotate" id="90r" value="-90" title="rotate 90deg right"> - 270&#176;</p>
+                        <p><input type="radio" name="rotate" id="180" value="180" title="rotate 180deg left"> - 180&#176;</p>
+                        <p><input type="radio" name="rotate" id="flip" value="270" title="mirror reflection"> - mirror</p>
+                        <p><input type="radio" name="rotate" id="arbitrary" value="arbitrary" title="arbitrary"> - <input type="number" name="degrees" id="degrees" placeholder="&#177;0-90&#176;" value="0" minlength="1" maxlength="3" min="-90"  max="90" disabled></p>
+                      </div>
                     </div>
-                  </div>
-                
-                  <div class="content" id="rotation">
-                    <p>Rotate</p>
-                    <div class="radioBlock" id="radioBlock">
-                      <p><input type="radio" name="rotate" id="0" min="0" value="0" title="rotate 0deg" checked> - 0&#176;</p>
-                      <p><input type="radio" name="rotate" id="90l" value="90" title="rotate 90deg left"> - 90&#176;</p>
-                      <p><input type="radio" name="rotate" id="90r" value="-90" title="rotate 90deg right"> - 270&#176;</p>
-                      <p><input type="radio" name="rotate" id="180" value="180" title="rotate 180deg left"> - 180&#176;</p>
-                      <p><input type="radio" name="rotate" id="flip" value="270" title="mirror reflection"> - mirror</p>
-                      <p><input type="radio" name="rotate" id="arbitrary" value="arbitrary" title="arbitrary"> - <input type="number" name="degrees" id="degrees" placeholder="&#177;0-90&#176;" value="0" minlength="1" maxlength="3" min="-90"  max="90" disabled></p>
-                    </div>
-                  </div>
-            </article>
-        </div>
+                  </div>    
 
         <div class="buttonEdit">
             <button id="saveIMGBrauser">Save</button>  
@@ -373,6 +379,8 @@
 <script>
 
 //data collection
+//Обьект с данными 
+let clicks = {};   
 //Размер Resize
 let checked = document.getElementById("cbProportions");
 let numWidth = document.getElementById("numWidth");
@@ -381,9 +389,9 @@ let inputScale = document.getElementById("inputScale");
 let scaleVersion = document.getElementById("scaleVersion"); 
 let nameScaleVersion;
 //Основные блоки
-let editColor = document.getElementById("main");
-let resize = document.getElementById("dimension");
-let rotate = document.getElementById("rotation");
+let editColor = document.getElementById("editColor");
+let resize = document.getElementById("resize");
+let rotate = document.getElementById("rotate");
 //img preload
 let imgSee = document.getElementById("imgSee");
 let imgPreload = document.getElementById("imgPreload");  
@@ -413,6 +421,7 @@ inputPhoto.addEventListener('change', function() {
     if (this.files && this.files[0]) { 
       //Убираем заставку
       imgSee.style = "display:none;"
+      canvasResult.style = "display:block;"
       //сбрасываем все данные
       reset();
       //Добавляем img preload
@@ -463,9 +472,7 @@ function initImg() {
               imgPreload.style.width = "auto";
               imgPreload.style.height = pageHeight+"px"; 
               //controlView
-              compareRange.style.width = img.width+"px";
-              //controlView
-              compareRange.style.width = document.getElementById("imgPreload").offsetWidth+"px";
+              compareRange.style.width = document.getElementById("canvasResult").offsetWidth+"px";
             }else{
               //canvas
               canvas.style.width  = "";
@@ -474,7 +481,7 @@ function initImg() {
               imgPreload.style.width = "";
               imgPreload.style.height = "";
               //controlView
-              compareRange.style.width = document.getElementById("imgPreload").offsetWidth+"px";
+              compareRange.style.width = img.width+"px";
             } 
         }
 }
@@ -484,35 +491,35 @@ function initImg() {
 //functional button EditionMenu
 function openMenu(event, blockName) {
     //Declare all variables
-    var i, tabcontent, tablinks;    
+    let tabcontent, tablinks;   
     // Get all elements with class="content" and hide them   
-    var tabcontent = document.getElementsByClassName("content");    
-    for (var i = 0; i < tabcontent.length; i++) {
+       tabcontent = document.getElementsByName("content");    
+    for (let i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
     }
     //Get all elements with class="links" and remove the "active" class
-    var tablinks = document.getElementsByClassName("links");    
-    for (var i = 0; i < tablinks.length; i++) {
+        tablinks = document.getElementsByClassName("links");    
+    for (let i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
     //Show the current tab and add the "active" class to the button that opened the tab
     document.getElementById(blockName).style.display = "block";
     event.currentTarget.className += " active";
-    //Маркер для определения какие действия производим - main/dimension/rotation   
+    //Маркер для определения какие действия производим - editColor/resiz/rotate   
     switch (blockName) {
-      case 'main': canvas.setAttribute('name', 'main') ;      
+      case 'editColor': canvas.setAttribute('name', 'editColor') ;      
         break;
-      case 'dimension': canvas.setAttribute('name', 'dimension');      
+      case 'resize': canvas.setAttribute('name', 'resize');      
         break;  
-      case 'rotation': canvas.setAttribute('name','rotation');      
+      case 'rotate': canvas.setAttribute('name','rotate');      
         break; 
     }
     //Передача информации для левой меню
     nameLeftPanel = blockName;  
     //Редоктирование анимации просмотршика изменений
-    if (canvas.dataset.img !== undefined && document.getElementById("controlView").className == "elementLeftPanel activeFunctiom") {
+    if (canvas.dataset.img !== undefined && document.getElementById("controlView").className == "elementLeftPanel activeFunction") {
       valueCompareRange = compareRange.value;
-      if (blockName == "dimension" || blockName == "rotation") {
+      if (blockName == "resize" || blockName == "rotate") {
          document.getElementById("controlView").style = "pointer-events : none; background-color: gray;";
          document.getElementById("fotoBlock").style.setProperty('--value', `0%`);
          compareRange.style.display = "none";
@@ -522,15 +529,15 @@ function openMenu(event, blockName) {
          document.getElementById("fotoBlock").style.setProperty('--value', valueCompareRange+`%`);
        } 
     }else{
-       if (blockName == "dimension" || blockName == "rotation") {
+       if (blockName == "resize" || blockName == "rotate") {
          document.getElementById("controlView").style = "pointer-events : none; background-color: gray;";
        }else{
          document.getElementById("controlView").style = "pointer-events : auto; background-color: whate;";
        } 
     }
 }
-//Моделируем нажатие на "mains" при загрузки
-document.getElementById("mains").click();
+//Моделируем нажатие на "rotate" при загрузки
+document.getElementById("startEditColor").click();
 //Переключатель Resize+Proportions
 checked.addEventListener('click',function(){         
         if (numHeight.className =="open") {
@@ -546,14 +553,13 @@ checked.addEventListener('click',function(){
 for (let i = 0; i < leftMiddleArea.childNodes.length; i++) {
   leftMiddleArea.childNodes[i].addEventListener("click",(e)=>{
     if (canvas.dataset.img !== undefined) {
-      if (nameLeftPanel == "main" && e.target.id == "controlView") {
+      if (nameLeftPanel == "editColor" && e.target.id == "controlView") {
         controlView();
-        leftMiddleArea.childNodes[i].classList.toggle("activeFunctiom");
+        leftMiddleArea.childNodes[i].classList.toggle("activeFunction");
       } else {
         switch (e.target.id) {
-        case "moveHand":
-          moveHand();
-          leftMiddleArea.childNodes[i].classList.toggle("activeFunctiom");
+        case "moveHand": moveHand();
+          leftMiddleArea.childNodes[i].classList.toggle("activeFunction");
            break;
         case "zoomPlus": zoomPlus();
            break;
@@ -595,9 +601,570 @@ function controlView() {
     document.getElementById("fotoBlock").style.setProperty('--value', `0%`);  
   }
 };
+//Собирем переменные для редоктирования картинки
+//Действия при нажатии  
+let tabLinksEditFoto = document.getElementById("editFoto");
+for (let i = 0; i < tabLinksEditFoto.children.length; i++) {
+  let childrenElement = tabLinksEditFoto.children[i];
+  childrenElement.addEventListener("click", clickActionsEffect);
+  childrenElement.addEventListener("input", clickActions);
+  childrenElement.addEventListener("input", clickActionsSave,true);
+}
+
+//Функция для прослушивания событий для сбора информации
+function clickActionsEffect(e){
+    //Получите все элементы с class="links" и удалите "активный" класс
+    //editColor
+    for (let i = 0; i < editColor.children.length; i++) {
+        if (editColor.children[i].className) {
+            editColor.children[i].className = editColor.children[i].className.replace(" active", "");
+          }
+    }
+    //resize
+    resize.className = resize.className.replace(" active", "");
+    //rotate
+    rotate.className = rotate.className.replace(" active", "");
+    //Добавить класс «активный» к кнопке, которая открыла вкладку   
+    if (document.getElementById(e.target.name) !== null)
+    {
+      document.getElementById(e.target.name).className += " active";
+    }
+}
+function clickActions(e){
+  //Выводим информацию по input
+      //editColor    
+      if (e.target.id == "rangeContrast" || e.target.id == "valueContrast") {
+          document.getElementById("valueContrast").value = e.target.value;
+          document.getElementById("rangeContrast").value = e.target.value;
+        }
+      if (e.target.id == "rangeBrightness" || e.target.id == "valueBrightness") {
+          document.getElementById("valueBrightness").value = e.target.value;
+          document.getElementById("rangeBrightness").value = e.target.value;
+        }
+      if (e.target.id == "rangeSaturation" || e.target.id == "valueSaturation") {
+          document.getElementById("valueSaturation").value = e.target.value;
+          document.getElementById("rangeSaturation").value = e.target.value;
+        }
+      if (e.target.id == "rangeSharp" || e.target.id == "valueSharp") {
+          document.getElementById("valueSharp").value = e.target.value;
+          document.getElementById("rangeSharp").value = e.target.value;
+        } 
+      //rotate  
+      if ( document.getElementById("arbitrary").checked || e.target.id == "degrees") {
+        document.getElementById("degrees").disabled = false;
+      }else{
+        document.getElementById("degrees").disabled = true;
+      }
+      //resize
+      if (e.target.id == "resize" && numHeight.className =="closet") {
+        numHeight.value = Math.round(img.height * numWidth.value / img.width);
+      }
+      
+      //Добавляем маркер для определения перехода между типами input на CANVAS
+      if (e.target.id == "resize" || e.target.id =="rotate" || e.currentTarget.id =="editColor") {
+         canvas.setAttribute('class', e.target.id);  
+      } else {
+        canvas.setAttribute('class', e.target.name);
+      }
+}
+//Функция событий, алгоритм выполнения после изменений
+function clickActionsSave() {
+  for (let i = 0; i < tabLinksEditFoto.children.length; i++) {
+          let rozdil = tabLinksEditFoto.children[i];
+          if (rozdil.id == "editColor") {
+            let podrozdil = rozdil.children;
+            for (let i = 0; i < podrozdil.length; i++) {            
+              if (podrozdil[i].id) {
+                clicks[podrozdil[i].getElementsByTagName('input')[0].id] = podrozdil[i].getElementsByTagName('input')[0].value;
+              }
+            }
+          }     
+          if (rozdil.id == "resize") {
+            let podrozdil = rozdil.children[1]; 
+            if (numHeight.className == "closet") {
+              for (let i = 0; i < podrozdil.children.length; i++) {
+              clicks[podrozdil.children[0].id] = podrozdil.children[0].value;
+              clicks[podrozdil.children[1].id] =  String(Math.round(img.height * numWidth.value / img.width));
+              }
+            } else {
+              for (let i = 0; i < podrozdil.children.length; i++) {
+              clicks[podrozdil.children[0].id] = podrozdil.children[0].value;
+              clicks[podrozdil.children[1].id] =  podrozdil.children[1].value;
+              }
+            }  
+          } 
+          if (rozdil.id == "rotate") {
+            let podrozdil = rozdil.children[1];
+            for (let i = 0; i < podrozdil.children.length+1; i++) {
+              if (podrozdil.getElementsByTagName('input')[i].checked) {
+                clicks[podrozdil.getElementsByTagName('input')[i].name] = podrozdil.getElementsByTagName('input')[i].value;
+              }
+              if (podrozdil.getElementsByTagName('input')[i].id == "degrees") {
+                clicks.degrees = podrozdil.getElementsByTagName('input')[i].value;
+              }
+            }  
+          }
+
+        } 
+        console.log(clicks);
+        if (canvas.dataset.img !== undefined) {  
+          for (let index in clicks) {
+            let clickItem = index, 
+                clickValue = clicks[index];
+                if (clickItem == "rangeContrast") {
+                  editPicter(getImage(), clickItem, clickValue); 
+                }
+                if (clickItem == "rangeBrightness"  && clickValue !== "0") {
+                  editPicter(getImageSave(), clickItem, clickValue); 
+                }
+                if (clickItem == "rangeSaturation" && clickValue !== "0") {
+                  editPicter(getImageSave(), clickItem, clickValue);
+                }
+                if (clickItem == "rangeSharp"  && clickValue !== "0") {
+                  editPicter(getImageSave(), clickItem, clickValue); 
+                }
+                if(clickItem == "rotate" && clickValue !== "0") {
+                  editPicter(getImageSave(), clickValue, clickValue); 
+                }
+                if(clickItem == "degrees"  && clickValue !== "0") {
+                  editPicter(getImageSave(), clickItem, clickValue); 
+                }
+                if(clickItem == "numWidth" && parseInt(clickValue) !== canvas.width) {
+                  editPicter(getImageSave(), clickItem, clickValue); 
+                }
+                if(clickItem == "numHeight"  && parseInt(clickValue) !== canvas.height) {
+                  editPicter(getImageSave(), clickItem, clickValue); 
+                }
+                if (clickItem == "cbRed" && clickValue == true || clickItem == "cbGreen" && clickValue == true || clickItem == "cbBlue" && clickValue == true || clickItem == "cbAlpha" && clickValue == true ) {
+                  editPicter(getImageSave(), clickItem, clickValue); 
+                }
+                if (clickItem == "discolorationClick" && clickValue == true) {
+                  editPicter(getImageSave(), clickItem, clickValue); 
+                }
+                if (clickItem == "rangeR"  && clickValue !== "0" || clickItem == "rangeG"  && clickValue !== "0" || clickItem == "rangeB"  && clickValue !== "0" ) {
+                  editPicter(getImageSave(), clickItem, clickValue); 
+                }
+                if (clickItem == "rangeH" && clickValue !== "0" || clickItem == "rangeS" && clickValue !== "0" || clickItem == "rangeL" && clickValue !== "0" ) {
+                  editPicter(getImageSave(), clickItem, clickValue); 
+                }
+                if (clickItem == "rangeGamma" && parseInt(clickValue) !== 100) {
+                  editPicter(getImageSave(), clickItem, clickValue); 
+                }
+                if (clickItem == "rangeSize"  && clickValue > 0) {
+                  editPicter(getImageSave(), clickItem, clickValue); 
+                }
+                if (clickItem == "rangeHRadius"  && clickValue > 1) {
+                  editPicter(getImageSave(), clickItem, clickValue); 
+                }
+                if (clickItem == "rangeVRadius"  && clickValue > 1) {
+                  editPicter(getImageSave(), clickItem, clickValue); 
+                }      
+          }
+        }  
+}
 //Meny END
 
 //FUNCTIONAL
+//Редоктируем картинку
+function editPicter(inCanvas, clickItem, clickValue) { 
+  // Определите время начала выполнения функции
+  let startTime = new Date().getTime();
+
+        let src = new Uint32Array(inCanvas.data.buffer);
+        let width = inCanvas.width;
+        let height = inCanvas.height;
+        let contrast = 0;
+        let brightness = 0;
+        let saturation = 0;
+        let maxSaturation = 0;
+        let mix = 0.01; 
+        let angle;
+        //Определяем тип обработки Resize          
+        scaleVersion.addEventListener("change", function () {nameScaleVersion = scaleVersion.value;});
+        if (clickItem == "rangeContrast") {contrast = parseInt(clickValue)/255;}
+        else if(clickItem == "rangeBrightness"){brightness = parseInt(clickValue);}
+        else if(clickItem == "rangeSaturation"){
+          saturation = parseInt(clickValue);
+          maxSaturation = (saturation < 0) ? 255 : 128;
+        }
+        else if(clickItem == "rangeSharp"){mix = (clickValue)*0.01;}     
+        else if(clickItem == "degrees"){angle = Number(clickValue);} 
+        
+            //Contrast
+            if (clickItem == "rangeContrast" ) {
+                putImage(width, height, function (dst) {
+                  let avgGray = 0;
+                  for (let i = 0; i < dst.length; i++) {
+                    let r = src[i] & 0xFF;
+                    let g = (src[i] >> 8) & 0xFF;
+                    let b = (src[i] >> 16) & 0xFF;
+                    avgGray += (r * 0.2126 + g * 0.7152 + b * 0.0722);
+                  }
+                  avgGray /= dst.length;
+
+                  for (let i = 0; i < dst.length; i++) {
+                    let r = src[i] & 0xFF;
+                    let g = (src[i] >> 8) & 0xFF;
+                    let b = (src[i] >> 16) & 0xFF;
+
+                    // Contrast
+                    r += (r - avgGray) * contrast;
+                    g += (g - avgGray) * contrast;
+                    b += (b - avgGray) * contrast;
+                    
+                    if (r > 255) r = 255;
+                    else if (r < 0) r = 0;
+                    if (g > 255) g = 255;
+                    else if (g < 0) g = 0;
+                    if (b > 255) b = 255;
+                    else if (b < 0) b = 0;
+
+                    dst[i] = (src[i] & 0xFF000000) | (b << 16) | (g << 8) | r;
+                  } 
+                  histogram(dst);    
+                })
+            }
+            //Brightness
+            if ( clickItem == "rangeBrightness") {
+                putImage(width, height, function (dst) {
+                  let avgGray = 0;
+                  for (let i = 0; i < dst.length; i++) {
+                    let r = src[i] & 0xFF;
+                    let g = (src[i] >> 8) & 0xFF;
+                    let b = (src[i] >> 16) & 0xFF;
+                    avgGray += (r * 0.2126 + g * 0.7152 + b * 0.0722);
+                  }
+                  avgGray /= dst.length;
+
+                  for (let i = 0; i < dst.length; i++) {
+                    let r = src[i] & 0xFF;
+                    let g = (src[i] >> 8) & 0xFF;
+                    let b = (src[i] >> 16) & 0xFF;
+
+
+                    // Brightness
+                    r += brightness;
+                    g += brightness;
+                    b += brightness;
+
+
+                    if (r > 255) r = 255;
+                    else if (r < 0) r = 0;
+                    if (g > 255) g = 255;
+                    else if (g < 0) g = 0;
+                    if (b > 255) b = 255;
+                    else if (b < 0) b = 0;
+
+                    dst[i] = (src[i] & 0xFF000000) | (b << 16) | (g << 8) | r;
+                  }  
+                  histogram(dst);   
+                })
+            }
+            //Saturation
+            if (clickItem == "rangeSaturation") {
+                putImage(width, height, function (dst) {
+                  for (let i = 0; i < dst.length; i++) {
+                    let r = src[i] & 0xFF;
+                    let g = (src[i] >> 8) & 0xFF;
+                    let b = (src[i] >> 16) & 0xFF;
+                    let gray = (r * 0.2126 + g * 0.7152 + b * 0.0722);
+
+                    r += (r - gray) * saturation / maxSaturation;
+                    g += (g - gray) * saturation / maxSaturation;
+                    b += (b - gray) * saturation / maxSaturation;
+
+                    if (r > 255) r = 255;
+                    else if (r < 0) r = 0;
+                    if (g > 255) g = 255;
+                    else if (g < 0) g = 0;
+                    if (b > 255) b = 255;
+                    else if (b < 0) b = 0;
+
+                    dst[i] = (src[i] & 0xFF000000) | (b << 16) | (g << 8) | r;
+                  }
+                  histogram(dst);    
+                })
+            }
+            //Sharp
+            if (clickItem == "rangeSharp") {  
+              putImage(width, height, function (dst) {
+              //Все для работы с матрицей
+              let kernel = [[0, -1, 0],//матрица
+                           [-1, 5, -1],
+                           [0, -1, 0]],
+                  katet = Math.round(Math.sqrt(kernel.length))+1,//корень 9=3
+                  half = (katet * 0.5) | 0,//3*0.5=1.5 отбрасываем значения после запятой
+                  offset = 0,//offset - коэффициент
+                  div = 1.0;//div - делитель        
+              //обработка пикселей
+              let dstIndex = 0;
+                for (let y = 0; y < height; y++) {
+                  for (let x = 0; x < width; x++) {
+                    let r = 0, g = 0, b = 0;
+                    for (let sy = 0; sy < katet; sy++) {
+                      const yy = Math.min(height - 1, Math.max(0, y + sy - half));
+                      for (let sx = 0; sx < katet; sx++) {
+                        const xx = Math.min(width - 1, Math.max(0, x + sx - half));
+                        let pix = src[yy * width + xx];//обробатываем информацию                     
+                        r += ((pix & 0xFF) * kernel[sy][sx]);
+                        g += ((((pix) >> 8) & 0xFF) * kernel[sy][sx]);
+                        b += ((((pix) >> 16) & 0xFF) * kernel[sy][sx]);
+                      }
+                    }          
+                    red = Math.min(255,Math.max(0, (r*mix)+((src[y * width + x] )&0xFF)*(1-mix) ))&0xFF;
+                    green = Math.min(255, Math.max(0, (g*mix)+(((src[y * width + x])>> 8)&0xFF)*(1-mix) ))&0xFF;
+                    blue = Math.min(255, Math.max(0, (b*mix)+(((src[y * width + x])>> 16)&0xFF)*(1-mix) ))&0xFF;
+                    const alfa = src[y * width + x] & 0xFF000000;//обробатываем информацию
+                    dst[dstIndex++] = red | ((green) << 8) | ((blue) << 16) | alfa ;//заполняем изменениями            
+                  }
+                }
+                histogram(dst); 
+              })
+            }
+            //Rotate 0
+            if (clickItem == "0") {
+                putImage(width, height, function (dst) {
+                for (let i = 0; i < dst.length; i++) {
+                dst[i] = src[i];
+                }
+                })
+            }
+            //Rotate 90
+            if (clickItem == "90") {
+              
+                putImage(height, width, function (dst) {
+                let newWidth = height;
+                let newHeight = width;
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+                for (let y = 0; y < newHeight; y++) {
+                  for (let x = 0; x < newWidth; x++) {
+                    dst[y * newWidth + x] = src[(height - x - 1) * width + y];
+                  }
+                }                  
+               })
+            }
+            //Rotate 270
+            if (clickItem == "-90") {
+                putImage(height, width, function (dst) {
+                let newWidth = height;
+                let newHeight = width;
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+                for (let y = 0; y < newHeight; y++) {
+                  for (let x = 0; x < newWidth; x++) {
+                    dst[y * newWidth + x] = src[x * width + y];
+                  }
+                }
+                })
+            }
+            //Rotate 180
+            if (clickItem == "180") {
+                putImage(width, height, function (dst) {
+                for (let y = 0; y < height; y++) {
+                  for (let x = 0; x < width; x++) {
+                    dst[y * width + x] = src[(height - y - 1)  * width + x];
+                  }
+                }               
+                })
+            }   
+            //Rotate flip
+            if (clickItem == "270") {
+                putImage(width, height, function (dst) {
+               for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    dst[y * width + x] = src[y * width + (width - x - 1)];
+                  }
+                }          
+                })         
+            }
+            //Rotate Degress
+            if (clickItem == "degrees" ) {
+                    const cosTheta = Math.cos(clickValue* (Math.PI / 180));
+                    const sinTheta = Math.sin(clickValue* (Math.PI / 180));
+                    //Расчет изменяюшейся ширины и высоты
+                    const newWidth = Math.round(Math.abs(width * cosTheta) + Math.abs(height * sinTheta));
+                    const newHeight = Math.round(Math.abs(width * sinTheta) + Math.abs(height * cosTheta));
+                    canvas.width = newWidth;
+                    canvas.height = newHeight;
+                putImage(newWidth, newHeight, function (dst) {
+                  rotateDegress(newWidth, newHeight, cosTheta, sinTheta, dst, src);
+                }) 
+                  function rotateDegress(newWidth, newHeight, cosTheta, sinTheta, dst, src) {
+                    //Метод ближайшего соседа(не самый лучший)
+                    const centerX = newWidth / 2;
+                      const centerY = newHeight / 2;
+                      for (let y = 0; y < newHeight; y++) {
+                          for (let x = 0; x < newWidth; x++) {
+                              const destIndex = y* newWidth + x;
+                              const rotatedX = Math.round((x - centerX) * cosTheta - (y - centerY) * sinTheta + width / 2);
+                              const rotatedY = Math.round((x - centerX) * sinTheta + (y - centerY) * cosTheta + height / 2);
+                              if (rotatedX >= 0 && rotatedX < width && rotatedY >= 0 && rotatedY < height) {
+                                const srcIndex = rotatedY * width + rotatedX;
+                                dst[destIndex] = src[srcIndex];
+                                dst[destIndex + 1] = src[srcIndex + 1];
+                                dst[destIndex + 2] = src[srcIndex + 2];
+                                dst[destIndex + 3] = src[srcIndex + 3];
+                              }
+                          }
+                      } 
+                      return dst;
+                  }   
+            }
+            //Resize
+            if (clickItem == "numWidth" || clickItem == "numHeight") {
+              let newWidth = numWidth.value;
+              if (numHeight.className =="closet") {numHeight.value = Math.round(img.height * numWidth.value / img.width);}
+              let newHeight = numHeight.value;
+              canvas.width = newWidth;
+              canvas.height = newHeight;
+              putImage(newWidth, newHeight, function (dst) {
+                if (nameScaleVersion == "bilinear") {
+                    //Bilinear scaling
+                    function interpolate(a, b, c, d, width, height) {
+                    return a * (1 - width) * (1 - height)
+                        + b * width * (1 - height)
+                        + c * (1 - width) * height
+                        + d * width * height;
+                    }
+                    const xMax = (width - 1);
+                    const yMax = (height - 1);
+                    const dx = (xMax + 0.5) / newWidth;
+                    const dy = (yMax + 0.5) / newHeight;
+                    let dstOffset = 0;
+                    for (let i = 0; i < newHeight; i++) {
+                      for (let j = 0; j < newWidth; j++) {
+                        const x = (dx * j) >> 0;
+                        const y = (dy * i) >> 0;
+                        const xDiff = (dx * j) - x;
+                        const yDiff = (dy * i) - y;
+                        const index = y * width + x;
+                        // a b
+                        // c d
+                        const a = src[index];
+                        const b = (x >= xMax) ? a : src[index + 1];
+                        const c = (y >= yMax) ? a : src[index + width];
+                        const d = (y >= yMax) ? b
+                            : ((x >= xMax) ? c : (src[index + width + 1]))
+                        const red = interpolate(
+                            a & 0xff, b & 0xff,
+                            c & 0xff, d & 0xff,
+                            xDiff, yDiff) >> 0;
+                        const green = interpolate(
+                            (a >> 8) & 0xff, (b >> 8) & 0xff,
+                            (c >> 8) & 0xff, (d >> 8) & 0xff,
+                            xDiff, yDiff) >> 0;
+                        const blue = interpolate(
+                            (a >> 16) & 0xff, (b >> 16) & 0xff,
+                            (c >> 16) & 0xff, (d >> 16) & 0xff,
+                            xDiff, yDiff) >> 0;
+                        const alpha = interpolate(
+                            (a >> 24) & 0xff, (b >> 24) & 0xff,
+                            (c >> 24) & 0xff, (d >> 24) & 0xff,
+                            xDiff, yDiff) >> 0
+                        dst[dstOffset++] = (alpha << 24) | (blue << 16) | (green << 8) | red;
+                      }
+                    } 
+              }else if(nameScaleVersion == "lanczos") {
+                    //Lanczos scaling
+                    let filterSize = 1;//меняется 1,2,3
+                    function lanczos(size, x) {
+                      if (x >= size || x <= -size) return 0;
+                      if (x === 0) return 1;
+                      const xpi = x * Math.PI;
+                      return size * Math.sin(xpi) * Math.sin(xpi / size) / (xpi * xpi);
+                    }
+                    function createCache(cachePrecision, filterSize) {
+                    const cache = {};
+                    const max = filterSize * filterSize * cachePrecision;
+                    const iPrecision = 1.0 / cachePrecision;
+                    for (let cacheKey = 0; cacheKey < max; cacheKey++) {
+                      const value = lanczos(filterSize, Math.sqrt(cacheKey * iPrecision));
+                      cache[cacheKey] = value < 0 ? 0 : value;
+                    }
+                     return cache;
+                    };
+                    const values = [];
+                    const sx = newWidth / width;
+                    const sy = newHeight / height;
+                    const xMax = width - 1;
+                    const yMax = height - 1;
+                    const csx = Math.min(1, sx) * Math.min(1, sx);
+                    const csy = Math.min(1, sy) * Math.min(1, sy);
+                    const cachePrecision = 1000;
+                    const cache = createCache(cachePrecision, filterSize);
+                    let x1et, y1et;
+                    let y = newHeight;
+                    while (y--) {
+                      const sourcePixelY = (y + 0.5) * (1.0 / sy);
+                      let y1b = sourcePixelY - filterSize;
+                      if (y1b < 0) y1b = 0;
+                      let y1e = y1et = sourcePixelY + filterSize;
+                      if (y1e != y1et) y1e = y1et + 1;
+                      if (y1e > yMax) y1e = yMax;
+                      const cy = y * (1.0 / newHeight) - sourcePixelY;
+                      const y3 = y * newWidth;
+                      let x = newWidth;
+                      while (x--) {
+                        const sourcePixelX = (x + 0.5) * (1.0 / sx);
+                        let x1b = sourcePixelX - filterSize;
+                        if (x1b < 0) x1b = 0;
+                        let x1e = x1et = sourcePixelX + filterSize;
+                        if (x1e != x1et) x1e = x1et + 1;
+                        if (x1e > xMax) x1e = xMax;
+                        const cx = x * (1.0 / newWidth) - sourcePixelX;
+                        ///
+                        let total = 0;
+                        let i = 0;
+                        for (let y1 = y1b >> 0; y1 <= y1e; y1++) {
+                          const distanceY = (y1 + cy) * (y1 + cy) * csy;
+                          for (let x1 = x1b >> 0; x1 <= x1e; x1++) {
+                            total += values[i++] = cache[(((x1 + cx) * (x1 + cx) * csx + distanceY) * cachePrecision) >> 0] || 0;
+                          }
+                        }
+                        total = 1.0 / total;
+                        ///
+                        let a = 0;
+                        let r = 0;
+                        let g = 0;
+                        let b = 0;
+                        i = 0;
+                        for (let y1 = y1b >> 0; y1 <= y1e; y1++) {
+                          const y2 = y1 * width;
+                          for (let x1 = x1b >> 0; x1 <= x1e; x1++) {
+                            const value = values[i++] * total;
+                            const pix = src[((y2 + x1) >> 0)];
+                            r += (pix & 0xFF) * value;
+                            g += ((pix >> 8) & 0xFF) * value;
+                            b += ((pix >> 16) & 0xFF) * value;
+                            a += (((pix >> 24) & 0xFF)) * value;
+                          }
+                        }
+                        dst[((x + y3) >> 0)] = (a << 24) | (b << 16) | (g << 8) | r;
+                      }
+                    } 
+                }else{
+                      //Nearest neighbor scaling
+                      const dx = width / newWidth;
+                        const dy = height / newHeight;
+                        for (let y = 0; y < newHeight; y++) {
+                          let srcY = (y * dy) >> 0;
+                          for (let x = 0; x < newWidth; x++) {
+                            let srcX = (x * dx) >> 0;
+                            dst[y * newWidth + x] = src[srcY * width + srcX];
+                          }
+                      }
+                } 
+              })
+            }
+            
+// Определите время завершения выполнения функции
+let endTime = new Date().getTime();
+// Вычислите время выполнения функции в миллисекундах
+let executionTime = endTime - startTime;
+// Выведите время выполнения функции в консоль
+console.log(' Время выполнения функции '+ clickItem +' : ' + executionTime + ' миллисекунд');
+}
 //Собираем информацию с Canvas
 function getImage() {
   canvas.width = img.width;
@@ -605,6 +1172,23 @@ function getImage() {
   ctx.drawImage(img, 0, 0);
   //Передаем информацию в функцию для редоктирования картинки    
   return ctx.getImageData(0, 0, canvas.width, canvas.height);      
+}
+
+//Собираем информацию с Canvas после внесения изменений
+function getImageSave() {
+    //Передаем информацию в функцию для редоктирования картинки
+    return ctx.getImageData(0, 0, canvas.width, canvas.height);    
+}
+
+//Записываем информацию на Canvas
+function putImage(width, height, func) {
+    const outImagen = ctx.createImageData(width, height);
+    const dst = new Uint32Array(outImagen.data.buffer);
+    func(dst);
+    //Очишаем холст
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //выводим измения 
+    ctx.putImageData(outImagen, 0,0); 
 }
 //FUNCTIONAL END
 
@@ -706,7 +1290,7 @@ let switchHistogram = document.getElementsByName("rType");
 for (let i = 0; i < switchHistogram.length; i++) { 
   switchHistogram[i].addEventListener('change',()=>{
     if (canvas.dataset.img !== undefined) {
-      histogram(new Uint32Array(getImage().data.buffer));
+      clickActionsSave();
     } 
   });
 }
@@ -714,10 +1298,42 @@ for (let i = 0; i < switchHistogram.length; i++) {
 
 //Reset
 //1 Meny
-let resetPages = document.getElementById("resetButton");
+  let resetPages = document.getElementById("resetButton");
   resetPages.addEventListener('click', reset);
   function reset(){ 
+    let inputSizeColor = editColor.getElementsByTagName('input'),
+    inputRangeScale = document.getElementsByName("resiz"),
+    inputRotation = rotate.getElementsByTagName("input");
+  
+    
+    //Color+scale
+    for (let i = 0; i <= inputSizeColor.length; i++) 
+    {
+      if(inputSizeColor[i]  || inputRangeScale[i] ){
+        //main
+        inputSizeColor[i].value = 0;
+      }
+    }
+   
+    //scale
+      numWidth.value = img.width;
+      numHeight.value = img.height; 
+      numHeight.className = "closet"; 
+      numHeight.disabled = true;
+      checked.checked =true;
+      scaleVersion[0].selected = true;
 
+      //rotations
+      inputRotation[0].checked = true;
+      inputRotation[6].setAttribute("disabled","");
+      inputRotation[6].value = 0;
+
+      //удаляем метку для сохранения картинки
+      document.getElementById("canvasResult").removeAttribute("class");
+      //Загрузем сново картинку
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
     }
 //2 PhotoEditor
 let closetImg = document.getElementById("closetImg");
@@ -742,659 +1358,6 @@ function saveImg() {
     document.body.removeChild(link);      
 } 
 //SAVE END
-
-
-
-/*
-//Metod Scale
-scaleVersion.addEventListener("change", function () {
-    nameScaleVersion = scaleVersion.value;    
-    actions(nameScaleVersion);
-  });
-
-//Uploading a photo (file) as a DOMelement
-document.getElementById('input').addEventListener('change', function() {    
-    if (this.files && this.files[0]) {      
-        .src = URL.createObjectURL(this.files[0]);
-      imgPreload.className = this.files[0].name; 
-      //убираем поправку если загружаем картинку без перезагрузки страницы
-      canvas.style.position = "";
-      canvas.style.top = "";
-
-      imgPreload.style.position = "fixed";
-      imgPreload.style.top = "";
-      imgPreload.style.width = "";
-    }
-});
-
-imgPreload.addEventListener("load",function loadImg() {
-  //делаем невидимым картинку
-  imgPreload.style.opacity = "0";
-  //вводим поправку на коэфициент сторон
-  let sideRatio = imgPreload.width/imgPreload.height;
-  if (sideRatio < 1) {
-    canvas.style.position = "absolute";
-    canvas.style.top = "0";
-
-    imgPreload.style.position = "absolute";
-    imgPreload.style.top = "0";
-    imgPreload.style.width = "500px";
-  }  
-})
-
- 
-//Get/Input Imagen+Canvas
-//Маркер для переноса информации с измененного cavasa
-let content = document.getElementsByClassName("content");
-for (let i = 0; i < content.length; i++) {  
-  content[i].addEventListener("click", ()=>{
-    canvas.className = imgPreload.className;    
-  });
-}
-//Получаем данные изображения 
-function getImageData() {
-    //Получаем объект img+canvas      
-    const canvas = document.getElementById('canvasResult');
-    const context = canvas.getContext('2d');
-    const img = document.getElementById('imgPreload');  
-    //Задать размер канваса
-    canvas.width = img.width;
-    canvas.height = img.height;
-    //Отрисовать картинку
-    context.drawImage(img, 0, 0);
-    //заполняем инпут размерами конвас в - Dimensions
-    numWidth.value = canvas.width;
-    numHeight.value = canvas.height;
-    //Получаем копию пиксельных данных для контекста холста
-    return context.getImageData(0, 0, img.width, img.height);//объект ImageData, который копирует пиксельные данные заданной прямоугольной области холста
-}
-//выводим canvas с изменениями
-function processCanvas(canvasId, width, height, func) {    
-    const canvasSize = document.getElementById(canvasId);
-    canvasSize.width = width;
-    canvasSize.height = height;
-    const ctx = canvasSize.getContext('2d');
-    //Создаем новый пустой объект ImageData
-    const outImg = ctx.createImageData(width, height);
-    const dst = new Uint32Array(outImg.data.buffer);     
-    func(dst);          
-    //Рисуем полученные пиксельные данные из заданного ImageData объекта на холст
-    ctx.putImageData(outImg, 0, 0); 
-}
-
-//Main
-
-//Edit CANVAS Brightness/Contrast/Saturation
-function editCanvasBCS(inImg) { 
-    const width = inImg.width;
-    const height = inImg.height;
-    const src = new Uint32Array(inImg.data.buffer);
-processCanvas('canvasResult', width, height, function (dst) { 
-  //brightness/contrast/saturation elements
-  let brightness = parseInt(document.getElementById("Brightness").value);
-  let contrast = parseInt(document.getElementById("Contrast").value)/250;
-  //saturation
-  let saturation = parseInt(document.getElementById("Saturation").value);
-  let max = (saturation < 0) ? 255 : 128;
-
-   //brightness/contrast/saturation
-      let avgGray = 0;
-      for (let i = 0; i < dst.length; i++) {
-        let r = src[i] & 0xFF;
-        let g = (src[i] >> 8) & 0xFF;
-        let b = (src[i] >> 16) & 0xFF;
-        avgGray += (r * 0.2126 + g * 0.7152 + b * 0.0722);
-      }
-      avgGray /= dst.length;
-
-      for (let i = 0; i < dst.length; i++) {   
-        let r = src[i] & 0xFF;
-        let g = (src[i] >> 8) & 0xFF;
-        let b = (src[i] >> 16) & 0xFF;
-
-        // Contrast
-        r += (r - avgGray) * contrast;
-        g += (g - avgGray) * contrast;
-        b += (b - avgGray) * contrast;
-        
-        // Brightness
-        r += brightness;
-        g += brightness;
-        b += brightness;      
-        
-        // Saturation
-        r += (r - avgGray) * saturation / max;
-        g += (g - avgGray) * saturation / max;
-        b += (b - avgGray) * saturation / max;
-
-        if (r > 255) r = 255;
-        else if (r < 0) r = 0;
-        if (g > 255) g = 255;
-        else if (g < 0) g = 0;
-        if (b > 255) b = 255;
-        else if (b < 0) b = 0;
-       
-      dst[i] = (src[i] & 0xFF000000) | (b << 16) | (g << 8) | r;//заполняем изменениями    
-      } 
-    histogram(dst); //Histogram  
-    });
-}
-//Edit CANVAS Sharp
-function editCanvasSharp(ctx, w, h, mix) {   
-  var weights = [0, -1, 0, -1, 5, -1, 0, -1, 0],//матрица
-    katet = Math.round(Math.sqrt(weights.length)),//корень 9=3
-    half = (katet * 0.5) | 0,//3*0.5=1.5 отбрасываем значения после запятой
-    dstData = ctx.createImageData(w, h),// Получаем данные. Формат: {data: [], width: xx, height: xx}
-    dstBuff = dstData.data,// 8-bit processing----
-    srcBuff = ctx.getImageData(0, 0, w, h).data, 
-    y = h,
-    dst = new Uint32Array(dstData.data.buffer);
-  while (y--) {
-      x = w;
-      while (x--) {
-          var sy = y,
-              sx = x,
-              dstOff = (y * w + x) * 4,
-              r = 0,
-              g = 0,
-              b = 0,
-              a = 0;
-          for (var cy = 0; cy < katet; cy++) {
-              for (var cx = 0; cx < katet; cx++) {
-                  var scy = sy + cy - half;
-                  var scx = sx + cx - half;
-                  if (scy >= 0 && scy < h && scx >= 0 && scx < w) {
-                      var srcOff = (scy * w + scx) * 4;
-                      var wt = weights[cy * katet + cx];
-                      r += srcBuff[srcOff] * wt;
-                      g += srcBuff[srcOff + 1] * wt;
-                      b += srcBuff[srcOff + 2] * wt;
-                      a += srcBuff[srcOff + 3] * wt;
-                  }
-              }
-          }
-          dstBuff[dstOff] = r * mix + srcBuff[dstOff] * (1 - mix);
-          dstBuff[dstOff + 1] = g * mix + srcBuff[dstOff + 1] * (1 - mix);
-          dstBuff[dstOff + 2] = b * mix + srcBuff[dstOff + 2] * (1 - mix)
-          dstBuff[dstOff + 3] = srcBuff[dstOff + 3];          
-      }
-  }  
-  ctx.putImageData(dstData, 0, 0);//рисует данные из заданного ImageData объекта на холст
-  histogram(dst);
-}
-
-//Коректировка Brightness/Contrast/Saturation
-let rangeCanvas = document.getElementsByName("range");
-  for (let i = 0; i < rangeCanvas.length; i++) { 
-    let valueCanvas = document.getElementById("value"+rangeCanvas[i].id);
-    rangeCanvas[i].addEventListener('input',(e)=>{
-      actions(valueCanvas.value = e.target.value);
-    });
-    valueCanvas.addEventListener('input',(e)=>{
-      actions(rangeCanvas[i].value = e.target.value);
-    });
-  } 
-//Изменение резкости
-let mix = document.getElementById("Sharp");
-mix.addEventListener("input", ()=>{actions(mix);})  
-//Изменение положение картинки(Поворот)
-let degrees = document.getElementById("degrees"),
-    radioBlock = document.getElementById("radioBlock"),
-    inputRotation = radioBlock.getElementsByTagName("input"),
-    angle = 0;
-   for (let i = 0; i < inputRotation.length; i++) {        
-      inputRotation[i].addEventListener('change',function (){  
-          if (inputRotation[i].value == "arbitrary" || inputRotation[i].id == "degrees") {              
-              inputRotation["degrees"].removeAttribute("disabled");
-              inputRotation["degrees"].addEventListener('input',function (){
-              angle = inputRotation["degrees"].value;
-              //добавляем стили для canvas
-              canvas.style.margin = "auto";  
-              canvas.style.backgroundColor = "grey"; 
-            });              
-          } else {
-            angle = parseInt(inputRotation[i].value);
-            inputRotation["degrees"].setAttribute("disabled","");
-            //удаляем стили для canvas
-            canvas.style.margin = "";  
-            canvas.style.backgroundColor = ""; 
-          }  
-        actions(angle);          
-      });  
-    }
-
-//Rotation
-let rotations = document.getElementById("rotations");
-//Rotation CANVAS
-function editCanvasRotation(angle){
-  let TO_RADIANS = Math.PI/180, 
-      width = imgPreload.width,
-      height = imgPreload.height;      
-     if (angle == 270) {
-        canvas.width = imgPreload.width;
-        canvas.height = imgPreload.height;          
-        context.scale(-1, 1);
-        context.translate(-canvas.width,0);        
-        context.drawImage(imgPreload,0,0);
-     } else {        
-        var New_Height = Math.round(width * Math.abs(Math.sin(angle*TO_RADIANS)) + height * Math.abs(Math.cos(angle*TO_RADIANS)));
-        var New_Width = Math.round(width * Math.abs(Math.cos(angle*TO_RADIANS)) + height * Math.abs(Math.sin(angle*TO_RADIANS)));                
-        canvas.width = New_Width;
-        canvas.height = New_Height;  
-        var x = Math.round(New_Width/2);
-        var y = Math.round(New_Height/2);           
-        context.translate(x,y);            
-        context.rotate(angle * TO_RADIANS);       
-        context.drawImage(imgPreload, -(imgPreload.width/2), -(imgPreload.height/2));         
-     } 
-}
-
-//Dimensions
-
-//Switch+input
-let checked = document.getElementById("cbProportions"),
-    numWidth = document.getElementById("numWidth"),
-    numHeight = document.getElementById("numHeight"),
-    inputScale = document.getElementById("inputScale"),
-    dimensions = document.getElementById("dimensions");
-checked.addEventListener('click',function(){ 
-        if (numHeight.className =="open") {
-          numHeight.className = "closet";
-          numHeight.disabled = true;            
-        } else {
-          numHeight.className = "open";  
-          numHeight.disabled = false;           
-        } 
-})
-
-//Dimensions
-function editCanvasDimensions(inImg) {    
-  const width = inImg.width;
-  const height = inImg.height;
-  const src = new Uint32Array(inImg.data.buffer);  
-  inputScale.addEventListener('input',function (){
-  if (numHeight.className =="closet") {numHeight.value = Math.round(imgPreload.height * numWidth.value / imgPreload.width);}
-  const newWidth = numWidth.value;
-  const newHeight = numHeight.value;  
-  //Действия с конвас
-  processCanvas('canvasResult', newWidth, newHeight, function(dst) {
-  if (nameScaleVersion == "bilinear") {
-      //Bilinear scaling
-    function interpolate(a, b, c, d, width, height) {
-    return a * (1 - width) * (1 - height)
-        + b * width * (1 - height)
-        + c * (1 - width) * height
-        + d * width * height;
-    }
-    const xMax = (width - 1);
-    const yMax = (height - 1);
-    const dx = (xMax + 0.5) / newWidth;
-    const dy = (yMax + 0.5) / newHeight;
-    let dstOffset = 0;
-    for (let i = 0; i < newHeight; i++) {
-      for (let j = 0; j < newWidth; j++) {
-        const x = (dx * j) >> 0;
-        const y = (dy * i) >> 0;
-        const xDiff = (dx * j) - x;
-        const yDiff = (dy * i) - y;
-        const index = y * width + x;
-        // a b
-        // c d
-        const a = src[index];
-        const b = (x >= xMax) ? a : src[index + 1];
-        const c = (y >= yMax) ? a : src[index + width];
-        const d = (y >= yMax) ? b
-            : ((x >= xMax) ? c : (src[index + width + 1]));
-        
-        const red = interpolate(
-            a & 0xff, b & 0xff,
-            c & 0xff, d & 0xff,
-            xDiff, yDiff) >> 0;
-        const green = interpolate(
-            (a >> 8) & 0xff, (b >> 8) & 0xff,
-            (c >> 8) & 0xff, (d >> 8) & 0xff,
-            xDiff, yDiff) >> 0;
-        const blue = interpolate(
-            (a >> 16) & 0xff, (b >> 16) & 0xff,
-            (c >> 16) & 0xff, (d >> 16) & 0xff,
-            xDiff, yDiff) >> 0;
-        const alpha = interpolate(
-            (a >> 24) & 0xff, (b >> 24) & 0xff,
-            (c >> 24) & 0xff, (d >> 24) & 0xff,
-            xDiff, yDiff) >> 0;        
-        dst[dstOffset++] = (alpha << 24) | (blue << 16) | (green << 8) | red;        
-      }
-    }      
-    } else if(nameScaleVersion == "lanczos") {         
-    //Lanczos scaling
-    let filterSize = 1;//меняется 1,2,3
-    function lanczos(size, x) {
-      if (x >= size || x <= -size) return 0;
-      if (x === 0) return 1;
-      const xpi = x * Math.PI;
-      return size * Math.sin(xpi) * Math.sin(xpi / size) / (xpi * xpi);
-    }
-    function createCache(cachePrecision, filterSize) {      
-    const cache = {};
-    const max = filterSize * filterSize * cachePrecision;
-    const iPrecision = 1.0 / cachePrecision;
-    for (let cacheKey = 0; cacheKey < max; cacheKey++) {
-      const value = lanczos(filterSize, Math.sqrt(cacheKey * iPrecision));
-      cache[cacheKey] = value < 0 ? 0 : value;
-    }
-     return cache;
-    };
-    const values = [];
-    const sx = newWidth / width;
-    const sy = newHeight / height;
-    const xMax = width - 1;
-    const yMax = height - 1;
-    const csx = Math.min(1, sx) * Math.min(1, sx);
-    const csy = Math.min(1, sy) * Math.min(1, sy);
-    const cachePrecision = 1000;
-    const cache = createCache(cachePrecision, filterSize);
-    let x1et, y1et;
-    let y = newHeight;
-    while (y--) {
-      const sourcePixelY = (y + 0.5) * (1.0 / sy);
-      let y1b = sourcePixelY - filterSize;
-      if (y1b < 0) y1b = 0;
-      let y1e = y1et = sourcePixelY + filterSize;
-      if (y1e != y1et) y1e = y1et + 1;
-      if (y1e > yMax) y1e = yMax;
-      const cy = y * (1.0 / newHeight) - sourcePixelY;
-      const y3 = y * newWidth;
-      let x = newWidth;
-      while (x--) {
-        const sourcePixelX = (x + 0.5) * (1.0 / sx);
-        let x1b = sourcePixelX - filterSize;
-        if (x1b < 0) x1b = 0;
-        let x1e = x1et = sourcePixelX + filterSize;
-        if (x1e != x1et) x1e = x1et + 1;
-        if (x1e > xMax) x1e = xMax;
-        const cx = x * (1.0 / newWidth) - sourcePixelX;
-        ///
-        let total = 0;
-        let i = 0;
-        for (let y1 = y1b >> 0; y1 <= y1e; y1++) {
-          const distanceY = (y1 + cy) * (y1 + cy) * csy;
-          for (let x1 = x1b >> 0; x1 <= x1e; x1++) {
-            total += values[i++] = cache[(((x1 + cx) * (x1 + cx) * csx + distanceY) * cachePrecision) >> 0] || 0;
-          }
-        }
-        total = 1.0 / total;
-        ///
-        let a = 0;
-        let r = 0;
-        let g = 0;
-        let b = 0;
-        i = 0;
-        for (let y1 = y1b >> 0; y1 <= y1e; y1++) {
-          const y2 = y1 * width;
-          for (let x1 = x1b >> 0; x1 <= x1e; x1++) {
-            const value = values[i++] * total;
-            const pix = src[((y2 + x1) >> 0)];
-            r += (pix & 0xFF) * value;
-            g += ((pix >> 8) & 0xFF) * value;
-            b += ((pix >> 16) & 0xFF) * value;
-            a += (((pix >> 24) & 0xFF)) * value;
-          }
-        }                
-        dst[((x + y3) >> 0)] = (a << 24) | (b << 16) | (g << 8) | r;               
-      }
-    }      
-    } else{
-      //Nearest neighbor scaling
-      const dx = width / newWidth;
-        const dy = height / newHeight;
-        for (let y = 0; y < newHeight; y++) {
-          let srcY = (y * dy) >> 0;
-          for (let x = 0; x < newWidth; x++) {
-            let srcX = (x * dx) >> 0;            
-            dst[y * newWidth + x] = src[srcY * width + srcX];                        
-          }
-        }
-    }
-  });
- });  
-}
-
-//Histogram
-//Гистограмма
-function histogram(dst) {
-  //переключаем отображения гистограммы
-  const isValueHistogram = document.getElementById('typeValue').checked; 
-    let histBrightness = (new Array(256)).fill(0);
-    let histR = (new Array(256)).fill(0);
-    let histG = (new Array(256)).fill(0);
-    let histB = (new Array(256)).fill(0);
-    for (let i = 0; i < dst.length; i++) {
-      let r = dst[i] & 0xFF;
-      let g = (dst[i] >> 8) & 0xFF;
-      let b = (dst[i] >> 16) & 0xFF;
-      histBrightness[r]++;
-      histBrightness[g]++;
-      histBrightness[b]++;
-      histR[r]++;
-      histG[g]++;
-      histB[b]++;
-    }
-    
-    let maxBrightness = 0;
-    if (isValueHistogram) {
-      for (let i = 1; i < 256; i++) {
-        if (maxBrightness < histBrightness[i]) {
-          maxBrightness = histBrightness[i]
-        }
-      }
-    } else {
-      for (let i = 0; i < 256; i++) {
-        if (maxBrightness < histR[i]) {
-          maxBrightness = histR[i]
-        } else if (maxBrightness < histG[i]) {
-          maxBrightness = histG[i]
-        } else if (maxBrightness < histB[i]) {
-          maxBrightness = histB[i]
-        }
-      }
-    }
-    
-    const canvas = document.getElementById('canvasHistogram');
-    const ctx = canvas.getContext('2d');
-    let guideHeight = 8;
-    let startY = (canvas.height - guideHeight);
-    let dx = canvas.width / 256;
-    let dy = startY / maxBrightness;
-    ctx.lineWidth = dx;
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    for (let i = 0; i < 256; i++) {
-      let x = i * dx;
-      if (isValueHistogram) {
-        // Value
-        ctx.strokeStyle = "#000000";
-        ctx.beginPath();
-        ctx.moveTo(x, startY);
-        ctx.lineTo(x, startY - histBrightness[i] * dy);
-        ctx.closePath();
-        ctx.stroke(); 
-      } else {
-        // Red
-        ctx.strokeStyle = "rgba(220,0,0,0.5)";
-        ctx.beginPath();
-        ctx.moveTo(x, startY);
-        ctx.lineTo(x, startY - histR[i] * dy);
-        ctx.closePath();
-        ctx.stroke(); 
-        // Green
-        ctx.strokeStyle = "rgba(0,210,0,0.5)";
-        ctx.beginPath();
-        ctx.moveTo(x, startY);
-        ctx.lineTo(x, startY - histG[i] * dy);
-        ctx.closePath();
-        ctx.stroke(); 
-        // Blue
-        ctx.strokeStyle = "rgba(0,0,255,0.5)";
-        ctx.beginPath();
-        ctx.moveTo(x, startY);
-        ctx.lineTo(x, startY - histB[i] * dy);
-        ctx.closePath();
-        ctx.stroke(); 
-      }
-      // Guide
-      ctx.strokeStyle = 'rgb(' + i + ', ' + i + ', ' + i + ')';
-      ctx.beginPath();
-      ctx.moveTo(x, startY);
-      ctx.lineTo(x, canvas.height);
-      ctx.closePath();
-      ctx.stroke(); 
-    }
-}
-
-//переключатель для гистограммы ч-б/цветное
-let switchHistogram = document.getElementsByName("rType");
-for (let i = 0; i < switchHistogram.length; i++) { 
-  switchHistogram[i].addEventListener('change',()=>{  
-    actions(switchHistogram[i]);  
-  });
-}
-
-//LeftPanel
-function LeftPanel() {  
-  let all = document.getElementsByClassName("elementLeftPanel"),
-      zoomPlus = document.getElementById("zoomPlus"),
-      zoomMinus = document.getElementById("zoomMinus"),
-      controlView = document.getElementById("controlView"),
-      compareRange = document.getElementById("compareRange");      
-  //controlView  
-  controlView.addEventListener("click", function() {
-      this.classList.toggle("activeFunctiom");
-      //Панель сравнительного просмотра изменений       
-      if (controlView.className == "elementLeftPanel activeFunctiom") {
-        
-        //показываем индикатор изменений   
-        compareRange.style.display = "block";      
-        //показываем картинку предпросмотра
-        imgPreload.style.opacity = "1"; 
-        document.getElementById("fotoBlock").style.setProperty('--value', `50%`);      
-     
-      //actions view menu      
-      switch (nameLeftPanel) {
-            case 'main': compareRange.style.display = "block";
-                         imgPreload.style.opacity = "1"; 
-                         document.getElementById("fotoBlock").style.setProperty('--value', `50%`);    
-              break;
-            case 'dimension': compareRange.style.display = "none";
-                              document.getElementById("fotoBlock").style.setProperty('--value', `0%`);          
-                              alert("This functionality is not available in this section");
-              break;  
-            case 'rotation': compareRange.style.display = "none";
-                             document.getElementById("fotoBlock").style.setProperty('--value', `0%`);        
-                             alert("This functionality is not available in this section");
-              break;
-      }
-
-      } else{
-        //убираем индикатор изменений   
-        compareRange.style.display = "none";      
-        //скрываем картинку предпросмотра
-        imgPreload.style.opacity = "0";              
-        document.getElementById("fotoBlock").style.setProperty('--value', `0%`);        
-      }
-    });
-    //zoomPlus
-    zoomPlus.addEventListener("click", function() {
-      this.classList.toggle("activeFunctiom");
-    });
-    //zoomMinus
-    zoomMinus.addEventListener("click", function() {
-      this.classList.toggle("activeFunctiom");
-    });
-   }
-
-//Actions
-
-//Действия
-function actions() { 
-  let rotation = document.getElementById("rotation");                    
-    //Brightness/Contrast/Saturation  
-    editCanvasBCS(getImageData()); 
-    //резкость  
-    editCanvasSharp(context, canvas.width, canvas.height, parseInt(mix.value) * 0.01);    
-    //Поворот
-    rotations.addEventListener("click",()=>{
-      rotation.onchange = (e)=>{      
-          if (e.target.checked == false) {          
-             editCanvasRotation(angle);
-          }else{editCanvasRotation(angle);}    
-      }    
-    })
-    //Scale
-    dimensions.addEventListener('click',()=>{editCanvasDimensions(getImageData());})         
-}
-//Сохраняем  картинку в браузере
-var canvasResult = document.getElementById('canvasResult'),
-saveIMGBrauser = document.getElementById('saveIMGBrauser');
-//Сохраняем на прямую
-saveIMGBrauser.addEventListener("click", ()=>{saveImg()})
-//Обшая функция сохранения
-function saveImg() {
-    var dataURL = canvasResult.toDataURL("image/jpeg",1.0);//подгатавливаем данные для передачи  data:[<тип данных>][;base64],<данные>
-    var link = document.createElement("a");//создаем ссылку
-    document.body.appendChild(link); // Firefox требует, чтобы ссылка была в теле :(
-    link.href = dataURL;
-    link.download = imgPreload.className;
-    link.click();
-    document.body.removeChild(link);      
-} 
-
-//exit Edit foto
-//кнопка перезагрузки
-let closetImgSave = document.getElementById("closetImgSave"),
-//кнопка сохранения изменения фотографии при перезагрузек
-closetImgSaveYes = document.getElementById("closetImgSaveYes"),
-//кнопка перезагрузки без сохранения изменения фото
-closetImgSaveNoy = document.getElementById("closetImgSaveNoy");
-closetImg.addEventListener("click",()=>{
-  if (canvas.className) {
-    closetImgSave.style.display = "block";
-    closetImgSaveYes.addEventListener("click", ()=>{
-      closetImgSave.style.display = "none";
-      saveImg();
-      window.location.reload();
-    })
-    closetImgSaveNoy.addEventListener("click", ()=>{
-      window.location.reload();
-    })    
-  } else{window.location.reload();}   
-})
-//Кнопка Reset 
-let resetPages = document.getElementById("resetButton");
-  resetPages.addEventListener('click',function (){   
-    let inputSize = document.getElementsByName("range"),
-    inputNumber = document.getElementsByName("number"),
-    inputRangeScale = document.getElementsByName("rangeScale");     
-    for (let i = 0; i <= inputSize.length; i++) 
-    { 
-      //main
-      actions(inputSize[i].value = 0);
-      actions(inputNumber[i].value = 0);
-      //scale
-      if (inputRangeScale.value !== " ") {
-        inputRangeScale[0].value = canvas.width;
-        inputRangeScale[1].value = canvas.height;                
-      }
-      //rotations
-      document.getElementsByName("rotate")[0].checked = true;
-      inputRotation[6].setAttribute("disabled","");
-      editCanvasRotation(angle=0)
-      //удаляем метку для сохранения картинки
-      canvas.removeAttribute("class");
-    }    
-  }) 
-  
-*/
 
 /**Loader**/
 //Loader
