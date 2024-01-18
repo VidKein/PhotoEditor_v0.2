@@ -578,13 +578,37 @@ function moveHand() {
     canvas.style.cursor = "default";
   }
 };
+//Переменные для зумирования
+let translatePos = {x: 0, y: 0};
+let scale = 1.0;
+let scaleMultiplier = 0.98;
 //Приближение
 function zoomPlus() {
-console.log("zoomPlus");
+  scale /= scaleMultiplier;
+  translatePos = {
+  x: Math.floor((canvas.width-img.width*scale)/2) ,
+  y: Math.floor((canvas.height-img.height*scale)/2)};
+  console.log(translatePos, scale);
+  ctx.save();/*сохраняет все состояние холста, помещая текущее состояние в стек*/
+  ctx.translate(translatePos.x, translatePos.y);/*перемещая холст и его исходные x-единицы по горизонтали и y-единицы по вертикали на сетке*/
+  ctx.scale(scale, scale);/*преобразование масштабирования к единицам холста по горизонтали и/или вертикали*/
+  ctx.beginPath(); /*Вызовите этот метод, если хотите создать новый путь*/
+  ctx.drawImage(img, 0, 0);/*наносим на холст изображение*/
+  ctx.restore();/*восстанавливает последнее сохраненное состояние холста, извлекая верхнюю запись из стека состояний рисования. Если нет сохраненного состояния, этот метод ничего не делает.*/
 };
 //Удаление
 function zoomMinus() {
-console.log("zoomMinus");
+  scale *= scaleMultiplier;
+  translatePos = {
+  x: Math.floor((canvas.width-img.width*scale)/2) ,
+  y: Math.floor((canvas.height-img.height*scale)/2)};
+  console.log(translatePos, scale);
+  ctx.save();/*сохраняет все состояние холста, помещая текущее состояние в стек*/
+  ctx.translate(translatePos.x, translatePos.y);/*перемещая холст и его исходные x-единицы по горизонтали и y-единицы по вертикали на сетке*/
+  ctx.scale(scale, scale);/*преобразование масштабирования к единицам холста по горизонтали и/или вертикали*/
+  ctx.beginPath(); /*Вызовите этот метод, если хотите создать новый путь*/
+  ctx.drawImage(img, 0, 0);/*наносим на холст изображение*/
+  ctx.restore();/*восстанавливает последнее сохраненное состояние холста, извлекая верхнюю запись из стека состояний рисования. Если нет сохраненного состояния, этот метод ничего не делает.*/
 };
 //Просмотр результата
 function controlView() {
