@@ -1331,9 +1331,7 @@ for (let i = 0; i < switchHistogram.length; i++) {
       //удаляем метку для сохранения картинки
       document.getElementById("canvasResult").removeAttribute("class");
       //Загрузем сново картинку
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
+      clickActionsSave();
     }
 //2 PhotoEditor
 let closetImg = document.getElementById("closetImg");
