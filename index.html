@@ -581,12 +581,8 @@ function moveHand() {
 
 //Действие при нажатии на клавишы
 document.addEventListener('keyup', function (e) {
-  if (e.which == 107 || e.which == 191) {
-    zoomPlus();
-  }
-  if (e.which == 109 || e.which == 187) {
-    zoomMinus();
-  }
+  if (e.which == 107 || e.which == 187) {zoomPlus();}
+  if (e.which == 109 || e.which == 189) {zoomMinus();}
 });
 //Переменные для зумирования
 let translatePos = {x: 0, y: 0};
@@ -598,14 +594,7 @@ function zoomPlus() {
   translatePos = {
   x: Math.floor((canvas.width-img.width*scale)/2) ,
   y: Math.floor((canvas.height-img.height*scale)/2)};
-  console.log(translatePos, scale);
-  ctx.reset();
-  //ctx.save();/*сохраняет все состояние холста, помещая текущее состояние в стек*/
-  ctx.translate(translatePos.x, translatePos.y);/*перемещая холст и его исходные x-единицы по горизонтали и y-единицы по вертикали на сетке*/
-  ctx.scale(scale, scale);/*преобразование масштабирования к единицам холста по горизонтали и/или вертикали*/
-  //ctx.beginPath(); /*Вызовите этот метод, если хотите создать новый путь*/
-  ctx.drawImage(img, 0, 0);/*наносим на холст изображение*/
-  //ctx.restore();/*восстанавливает последнее сохраненное состояние холста, извлекая верхнюю запись из стека состояний рисования. Если нет сохраненного состояния, этот метод ничего не делает.*/
+  clickActionsSave();
 };
 //Удаление
 function zoomMinus() {
@@ -613,14 +602,7 @@ function zoomMinus() {
   translatePos = {
   x: Math.floor((canvas.width-img.width*scale)/2) ,
   y: Math.floor((canvas.height-img.height*scale)/2)};
-  console.log(translatePos, scale);
-  ctx.reset();
-  //ctx.save();/*сохраняет все состояние холста, помещая текущее состояние в стек*/
-  ctx.translate(translatePos.x, translatePos.y);/*перемещая холст и его исходные x-единицы по горизонтали и y-единицы по вертикали на сетке*/
-  ctx.scale(scale, scale);/*преобразование масштабирования к единицам холста по горизонтали и/или вертикали*/
-  //ctx.beginPath(); /*Вызовите этот метод, если хотите создать новый путь*/
-  ctx.drawImage(img, 0, 0);/*наносим на холст изображение*/
-  //ctx.restore();/*восстанавливает последнее сохраненное состояние холста, извлекая верхнюю запись из стека состояний рисования. Если нет сохраненного состояния, этот метод ничего не делает.*/
+  clickActionsSave();
 };
 
 //Просмотр результата
@@ -1206,7 +1188,8 @@ console.log(' Время выполнения функции '+ clickItem +' : '
 function getImage() {
   canvas.width = img.width;
   canvas.height = img.height;
-  ctx.drawImage(img, 0, 0);
+  console.log(translatePos, scale);
+  ctx.drawImage(img, translatePos.x , translatePos.y, canvas.width*scale, canvas.height*scale);
   //Передаем информацию в функцию для редоктирования картинки    
   return ctx.getImageData(0, 0, canvas.width, canvas.height);      
 }
@@ -1225,7 +1208,7 @@ function putImage(width, height, func) {
     //Очишаем холст
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     //выводим измения 
-    ctx.putImageData(outImagen, 0,0); 
+    ctx.putImageData(outImagen, 0, 0);
 }
 //FUNCTIONAL END
 
@@ -1364,6 +1347,10 @@ for (let i = 0; i < switchHistogram.length; i++) {
       inputRotation[0].checked = true;
       inputRotation[6].setAttribute("disabled","");
       inputRotation[6].value = 0;
+      
+      //Удаление зумирования
+      scale = 1;
+      translatePos = {x: 0 ,y: 0};
 
       //удаляем метку для сохранения картинки
       document.getElementById("canvasResult").removeAttribute("class");
