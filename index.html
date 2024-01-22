@@ -200,6 +200,36 @@
       background-color: #F7F7F7;
     }
     #inputPhoto{width: 100%;}
+    /*Отображения масштаба*/
+    .scalrImg{
+      position: absolute;
+      animation: zoom 1.2s infinite 0s ease-in-out;
+      display: none;
+    }
+    @keyframes zoom {
+      0%{
+        opacity: 0.08;
+        font-size: 10px;
+ 				font-weight: 400;
+				filter: blur(5px);
+				letter-spacing: 3px;
+        }
+    100%{
+        opacity: 1;
+        font-size: 25px;
+ 				font-weight:600;
+ 				filter: blur(0);
+        
+        }
+      }
+    .anime {  
+	      height:100%;
+ 	      width: 100%;
+	      font-family: Helvetica, sans-serif, Arial;
+	      animation: load 1.2s infinite 0s ease-in-out;
+	      animation-direction: alternate;
+	      text-shadow: 0 0 1px white;
+      }
 /*LOADER*/
 /*
 @keyframes load {
@@ -260,7 +290,8 @@
         <h2 class="animate">Loading</h2>
       </div>-->
       <img id="imgSee" src="./icons/pre-see.svg">             
-      <img id="imgPreload" src="" style="display: none;">      
+      <img id="imgPreload" src="" style="display: none;">  
+      <span id="scalrImg" class="scalrImg"></span>    
       <canvas id="canvasResult"></canvas>                      
       <input type="range" id="compareRange" class="c-rng c-compare__range" min="0" max="100" value="50" oninput="this.parentNode.style.setProperty('--value', `${this.value}%`)" />   
     </div> 
@@ -402,6 +433,8 @@ let leftMiddleArea = document.querySelector(".leftMiddleArea");
 //controlView
 let compareRange = document.getElementById("compareRange");
 let valueCompareRange = 50;
+//ZOOM
+let loaderZoomText = document.getElementById('scalrImg'); 
 //data collection END
 
 //loadImg
@@ -561,9 +594,11 @@ for (let i = 0; i < leftMiddleArea.childNodes.length; i++) {
         case "moveHand": moveHand();
           leftMiddleArea.childNodes[i].classList.toggle("activeFunction");
            break;
-        case "zoomPlus": zoomPlus();
+        case "zoomPlus": 
+          zoomPlus();
            break;
-        case "zoomMinus": zoomMinus();
+        case "zoomMinus": 
+          zoomMinus();
            break;
         }
        }
@@ -587,13 +622,15 @@ document.addEventListener('keyup', function (e) {
 //Переменные для зумирования
 let translatePos = {x: 0, y: 0};
 let scale = 1.0;
-let scaleMultiplier = 0.98;
+let scaleMultiplier = 0.98; 
 //Приближение
 function zoomPlus() {
   scale /= scaleMultiplier;
   translatePos = {
   x: Math.floor((canvas.width-img.width*scale)/2) ,
   y: Math.floor((canvas.height-img.height*scale)/2)};
+  loaderZoomText.style = "display: block";
+  setTimeout(loaderZoomScale,1200);
   clickActionsSave();
 };
 //Удаление
@@ -602,8 +639,14 @@ function zoomMinus() {
   translatePos = {
   x: Math.floor((canvas.width-img.width*scale)/2) ,
   y: Math.floor((canvas.height-img.height*scale)/2)};
+  loaderZoomText.style = "display: block";
+  setTimeout(loaderZoomScale,1200);
   clickActionsSave();
 };
+//Отключение текста отображения Масштаба
+function loaderZoomScale() {      
+  loaderZoomText.style ="display:none";
+  }
 
 //Просмотр результата
 function controlView() {
@@ -1188,7 +1231,7 @@ console.log(' Время выполнения функции '+ clickItem +' : '
 function getImage() {
   canvas.width = img.width;
   canvas.height = img.height;
-  console.log(translatePos, scale);
+  document.getElementById("scalrImg").innerHTML = "<span class = 'anime'>Масштаб: "+Math.floor(scale*100)+" % </span>"
   ctx.drawImage(img, translatePos.x , translatePos.y, canvas.width*scale, canvas.height*scale);
   //Передаем информацию в функцию для редоктирования картинки    
   return ctx.getImageData(0, 0, canvas.width, canvas.height);      
@@ -1351,6 +1394,7 @@ for (let i = 0; i < switchHistogram.length; i++) {
       //Удаление зумирования
       scale = 1;
       translatePos = {x: 0 ,y: 0};
+      document.getElementById("scalrImg").style = "display: none";
 
       //удаляем метку для сохранения картинки
       document.getElementById("canvasResult").removeAttribute("class");

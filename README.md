@@ -15,3 +15,4 @@ Functionality is realized:
 - reset all settings
 - viewing the result of change (works only in color redo mode)
 - image viewing: zooming in, zooming out and moving around
+- zoom display when zooming
