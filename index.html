@@ -591,7 +591,8 @@ for (let i = 0; i < leftMiddleArea.childNodes.length; i++) {
         leftMiddleArea.childNodes[i].classList.toggle("activeFunction");
       } else {
         switch (e.target.id) {
-        case "moveHand": moveHand();
+        case "moveHand":
+          moveHand();
           leftMiddleArea.childNodes[i].classList.toggle("activeFunction");
            break;
         case "zoomPlus": 
@@ -605,14 +606,6 @@ for (let i = 0; i < leftMiddleArea.childNodes.length; i++) {
     }  
   }); 
 }
-//Перемешение
-function moveHand() {
-  if (document.getElementById("moveHand").className == "elementLeftPanel") {
-    canvas.style.cursor = "move";
-  }else{
-    canvas.style.cursor = "default";
-  }
-};
 
 //Действие при нажатии на клавишы
 document.addEventListener('keyup', function (e) {
@@ -630,7 +623,7 @@ function zoomPlus() {
   x: Math.floor((canvas.width-img.width*scale)/2) ,
   y: Math.floor((canvas.height-img.height*scale)/2)};
   loaderZoomText.style = "display: block";
-  setTimeout(loaderZoomScale,1200);
+  setTimeout(loaderZoomScale,1500);
   clickActionsSave();
 };
 //Удаление
@@ -640,14 +633,52 @@ function zoomMinus() {
   x: Math.floor((canvas.width-img.width*scale)/2) ,
   y: Math.floor((canvas.height-img.height*scale)/2)};
   loaderZoomText.style = "display: block";
-  setTimeout(loaderZoomScale,1200);
+  setTimeout(loaderZoomScale,1500);
   clickActionsSave();
 };
 //Отключение текста отображения Масштаба
 function loaderZoomScale() {      
   loaderZoomText.style ="display:none";
   }
+//Переменные неоходимые для перемешения 
+let startDragOffset = {};
+let mouseDown = false;
+//Перемешение
+function moveHand() {
+  if (document.getElementById("moveHand").className == "elementLeftPanel") {
+    canvas.style.cursor = "move";
+    // add event listeners to handle screen drag
+    canvas.addEventListener("mousedown", function(evt) {//Кнопка мыши нажата над элементом
+          mouseDown = true;
+          startDragOffset = {
+          x : Math.floor(evt.clientX - translatePos.x),
+          y : Math.floor(evt.clientY - translatePos.y)};
+      });
 
+      canvas.addEventListener("mouseup", function() {//Кнопка мыши отпущена над элементом.
+        mouseDown = false;
+      });
+
+      canvas.addEventListener("mouseover", function() {//Курсор мыши появляется над элементом
+        mouseDown = false;
+      });
+
+      canvas.addEventListener("mouseout", function() {//Курсор уходит с него
+        mouseDown = false;
+      });
+      canvas.addEventListener("mousemove", function(evt) {//Каждое движение мыши над элементом генерирует это событие.
+       if (mouseDown && document.getElementById("moveHand").className !== "elementLeftPanel") {
+        translatePos = {
+          x : Math.floor(evt.clientX - startDragOffset.x),
+          y : Math.floor(evt.clientY - startDragOffset.y)};
+          clickActionsSave();
+        }
+      }, false); 
+      
+  }else{
+    canvas.style.cursor = "default";
+  }
+};  
 //Просмотр результата
 function controlView() {
   valueCompareRange = compareRange.value;
@@ -1395,6 +1426,8 @@ for (let i = 0; i < switchHistogram.length; i++) {
       scale = 1;
       translatePos = {x: 0 ,y: 0};
       document.getElementById("scalrImg").style = "display: none";
+      document.getElementById("moveHand").className = "elementLeftPanel";
+      canvas.style.cursor = "default";
 
       //удаляем метку для сохранения картинки
       document.getElementById("canvasResult").removeAttribute("class");
