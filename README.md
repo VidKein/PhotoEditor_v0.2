@@ -16,3 +16,14 @@ Functionality is realized:
 - viewing the result of change (works only in color redo mode)
 - image viewing: zooming in, zooming out and moving around
 - zoom display when zooming
+
+:( Errors detected during testing  :(-->
+- Number field on the "Color" panel does not work correctly. Changes only when changing shooters.
+- The width of the "Control view" field does not work correctly.  Especially when loading large images.
+- The "Zoom+Move" function works incorrectly after performing the "Resize+Rotate" function. The picture is blended.  
+
+Improve
+- Zoom display.
+- Connection between "Zoom" and "Move"....
+
+
