@@ -19,11 +19,9 @@ Functionality is realized:
 
 :( Errors detected during testing  :(-->
 - Number field on the "Color" panel does not work correctly. Changes only when changing shooters.
-- The width of the "Control view" field does not work correctly.  Especially when loading large images.
+- The width of the "Control view" field does not work correctly.  Especially when loading large images(+-).
 - The "Zoom+Move" function works incorrectly after performing the "Resize+Rotate" function. The picture is blended.  
 
 Improve
 - Zoom display.
 - Connection between "Zoom" and "Move"....
-
-

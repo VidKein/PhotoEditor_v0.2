@@ -203,7 +203,7 @@
     /*Отображения масштаба*/
     .scalrImg{
       position: absolute;
-      animation: zoom 1.2s infinite 0s ease-in-out;
+      animation: zoom 1s infinite 0s ease-in-out;
       display: none;
     }
     @keyframes zoom {
@@ -448,6 +448,9 @@ let ctx = canvas.getContext("2d");
 //Определяюшие размер фотоблока
 let pageWidth = document.querySelector(".fotoBlock").offsetWidth;
 let pageHeight = document.querySelector(".fotoBlock").offsetHeight;
+//Определяюшие размер canvas блока
+let pageCanvasWidth;
+let pageCanvasHeight;
 //img preload размер
 imgSee.style.width = (pageWidth-(pageWidth*60/100))+"px"; 
 //Дополнительная загрузка
@@ -487,7 +490,10 @@ function initImg() {
               imgPreload.style.width = (pageWidth-(pageWidth*20/100))+"px";
               imgPreload.style.height = "auto";
               //controlView
-              compareRange.style.width = (pageWidth-(pageWidth*20/100))+"px";
+              compareRange.style.width = document.getElementById("canvasResult").offsetWidth+"px";
+              //Определение размера canvas блока
+              pageCanvasWidth = document.getElementById("canvasResult").offsetWidth;
+              pageCanvasHeight = document.getElementById("canvasResult").offsetHeight;
             }else{
               //canvas
               canvas.style.width  = "";
@@ -497,6 +503,9 @@ function initImg() {
               imgPreload.style.height = "";
               //controlView
               compareRange.style.width = img.width+"px";
+              //Определение размера canvas блока
+              pageCanvasWidth = document.getElementById("canvasResult").offsetWidth;
+              pageCanvasHeight = document.getElementById("canvasResult").offsetHeight;
             } 
         }else{//vertical img
           if (img.height >= pageHeight) {
@@ -508,6 +517,9 @@ function initImg() {
               imgPreload.style.height = pageHeight+"px"; 
               //controlView
               compareRange.style.width = document.getElementById("canvasResult").offsetWidth+"px";
+              //Определение размера canvas блока
+              pageCanvasWidth = document.getElementById("canvasResult").offsetWidth;
+              pageCanvasHeight = document.getElementById("canvasResult").offsetHeight;
             }else{
               //canvas
               canvas.style.width  = "";
@@ -517,6 +529,9 @@ function initImg() {
               imgPreload.style.height = "";
               //controlView
               compareRange.style.width = img.width+"px";
+              //Определение размера canvas блока
+              pageCanvasWidth = document.getElementById("canvasResult").offsetWidth;
+              pageCanvasHeight = document.getElementById("canvasResult").offsetHeight;
             } 
         }
 }
@@ -611,8 +626,8 @@ for (let i = 0; i < leftMiddleArea.childNodes.length; i++) {
 
 //Действие при нажатии на клавишы
 document.addEventListener('keyup', function (e) {
-  if (e.which == 107 || e.which == 191) {zoomPlus();}
-  if (e.which == 109 || e.which == 187) {zoomMinus();}
+  if (e.which == 107) {zoomPlus();}
+  if (e.which == 109) {zoomMinus();}
 });
 //Переменные для зумирования
 let translatePos = {x: 0, y: 0};
@@ -625,7 +640,7 @@ function zoomPlus() {
   x: Math.floor((canvas.width-img.width*scale)/2) ,
   y: Math.floor((canvas.height-img.height*scale)/2)};
   loaderZoomText.style = "display: block";
-  setTimeout(loaderZoomScale,2000);
+  setTimeout(loaderZoomScale,1200);
   clickActionsSave();
 };
 //Удаление
@@ -635,7 +650,7 @@ function zoomMinus() {
   x: Math.floor((canvas.width-img.width*scale)/2) ,
   y: Math.floor((canvas.height-img.height*scale)/2)};
   loaderZoomText.style = "display: block";
-  setTimeout(loaderZoomScale,2500);
+  setTimeout(loaderZoomScale,1200);
   clickActionsSave();
 };
 //Отключение текста отображения Масштаба
@@ -801,33 +816,33 @@ function clickActionsSave(e) {
                     flipVertical = 1;
                     flipHorizontal = 1;
                     //Изменяем положение и размер controlView
-                    compareRange.style.width = img.width+"px";
+                    compareRange.style.width = pageCanvasWidth+"px";
                   }else if (podrozdil.getElementsByTagName('input')[i].value === "90") {
                     //Изменяем положение Предкартинки
                     rotateImg = 90; 
                     flipHorizontal = 1;
                     flipVertical = 1;
                     //Изменяем положение и размер controlView
-                    compareRange.style.width = img.height+"px";
+                    compareRange.style.width = pageCanvasHeight+"px";
                   } else if (podrozdil.getElementsByTagName('input')[i].value === "-90") {
                     //Изменяем положение Предкартинки
                     rotateImg = 270;
                     flipHorizontal = -1;
                     flipVertical = 1;
                     //Изменяем положение и размер controlView
-                    compareRange.style.width = img.height+"px";
+                    compareRange.style.width = pageCanvasHeight+"px";
                   } else if (podrozdil.getElementsByTagName('input')[i].value === "180") {
                     //Изменяем положение Предкартинки
                     rotateImg = 180;
                     flipHorizontal = -1;
                     //Изменяем положение и размер controlView
-                    compareRange.style.width = img.width+"px";
+                    compareRange.style.width = pageCanvasWidth+"px";
                   } else if (podrozdil.getElementsByTagName('input')[i].value === "270") {
                     //Изменяем положение Предкартинки
                     rotateImg = 0;
                     flipHorizontal = -1;
                     //Изменяем положение и размер controlView
-                    compareRange.style.width = img.width+"px";
+                    compareRange.style.width = pageCanvasWidth+"px";
                   }
               }
               if (podrozdil.getElementsByTagName('input')[i].id == "degrees") {
@@ -842,7 +857,7 @@ function clickActionsSave(e) {
                     const cosTheta = Math.cos(podrozdil.getElementsByTagName('input')[i].value* (Math.PI / 180));
                     const sinTheta = Math.sin(podrozdil.getElementsByTagName('input')[i].value* (Math.PI / 180));
                     //Расчет изменяюшейся ширины и высоты
-                    const newWidth = Math.round(Math.abs(img.width * cosTheta) + Math.abs(img.height * sinTheta));
+                    const newWidth = Math.round(Math.abs(pageCanvasWidth * cosTheta) + Math.abs(pageCanvasHeight * sinTheta));
                     compareRange.style.width = newWidth+"px";
                 }
               }
@@ -1318,7 +1333,6 @@ console.log(' Время выполнения функции '+ clickItem +' : '
 function getImage() {
   canvas.width = img.width;
   canvas.height = img.height; 
-  console.log(canvas.width);
   document.getElementById("scalrImg").innerHTML = "<span class = 'anime'>Масштаб: "+Math.floor(scale*100)+" % </span>"
   ctx.drawImage(img, translatePos.x , translatePos.y, canvas.width*scale, canvas.height*scale);
   //Передаем информацию в функцию для редоктирования картинки  
@@ -1485,7 +1499,7 @@ for (let i = 0; i < switchHistogram.length; i++) {
       applyFilter();
       //Изменяем положение и размер controlView
       compareRange.style.width = img.width+"px";
-      
+
       //Удаление зумирования
       scale = 1;
       translatePos = {x: 0 ,y: 0};
