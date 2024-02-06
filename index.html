@@ -495,25 +495,25 @@ function initImg() {
               pageCanvasHeight = document.getElementById("canvasResult").offsetHeight;
             }else{
               //canvas
-              canvas.style.width  = "";
+              canvas.style.width  = img.width+"px";
               canvas.style.height = "";
               //img
-              imgPreload.style.width = "";
+              imgPreload.style.width = img.width+"px";
               imgPreload.style.height = "";
               //controlView
-              compareRange.style.width = img.width+"px";
+              compareRange.style.width = document.getElementById("canvasResult").offsetWidth+"px";
               //Определение размера canvas блока
               pageCanvasWidth = document.getElementById("canvasResult").offsetWidth;
               pageCanvasHeight = document.getElementById("canvasResult").offsetHeight;
             } 
-        }else{//vertical img
-          if (img.height >= pageHeight) {
+        }else if(img.width < img.height){//vertical img
+          if (pageWidth <= pageHeight) {
               //canvas
-              canvas.style.width ="auto";
-              canvas.style.height = pageHeight+"px"; 
+              canvas.style.width = (pageWidth-(pageWidth*20/100))+"px";
+              canvas.style.height = ""; 
               //img
-              imgPreload.style.width = "auto";
-              imgPreload.style.height = pageHeight+"px"; 
+              imgPreload.style.width = (pageWidth-(pageWidth*20/100))+"px";
+              imgPreload.style.height = ""; 
               //controlView
               compareRange.style.width = document.getElementById("canvasResult").offsetWidth+"px";
               //Определение размера canvas блока
@@ -522,16 +522,42 @@ function initImg() {
             }else{
               //canvas
               canvas.style.width  = "";
-              canvas.style.height = "";
+              canvas.style.height = pageHeight+"px";
               //img
               imgPreload.style.width = "";
-              imgPreload.style.height = "";
+              imgPreload.style.height = pageHeight+"px";
               //controlView
-              compareRange.style.width = img.width+"px";
+              compareRange.style.width = document.getElementById("canvasResult").offsetWidth+"px";
               //Определение размера canvas блока
               pageCanvasWidth = document.getElementById("canvasResult").offsetWidth;
               pageCanvasHeight = document.getElementById("canvasResult").offsetHeight;
             } 
+        }else if(img.width == img.height){//widh==height
+          if (img.width >= pageWidth-(pageWidth*20/100)) {
+              //canvas
+              canvas.style.width = (pageWidth-(pageWidth*20/100))+"px";
+              canvas.style.height = ""; 
+              //img
+              imgPreload.style.width = (pageWidth-(pageWidth*20/100))+"px";
+              imgPreload.style.height = "auto";
+              //controlView
+              compareRange.style.width = document.getElementById("canvasResult").offsetWidth+"px";
+              //Определение размера canvas блока
+              pageCanvasWidth = document.getElementById("canvasResult").offsetWidth;
+              pageCanvasHeight = document.getElementById("canvasResult").offsetHeight; 
+          } else {
+              //canvas
+              canvas.style.width = img.width+"px";
+              canvas.style.height = ""; 
+              //img
+              imgPreload.style.width = img.width+"px";
+              imgPreload.style.height = "auto";
+              //controlView
+              compareRange.style.width = document.getElementById("canvasResult").offsetWidth+"px";
+              //Определение размера canvas блока
+              pageCanvasWidth = document.getElementById("canvasResult").offsetWidth;
+              pageCanvasHeight = document.getElementById("canvasResult").offsetHeight;
+          }
         }
 }
 //loadImg END
@@ -815,7 +841,7 @@ function clickActionsSave(e) {
                     flipHorizontal = 1;
                     //Изменяем положение и размер controlView
                     if(pageCanvasWidth > pageCanvasHeight){//horizontal img
-                      if (pageCanvasWidth >= pageHeight) {//Картинка большего размера
+                      if (pageWidth >= pageHeight) {//Картинка большего размера
                         //control Viev
                         imgPreload.style.width =  pageCanvasWidth+"px";
                         imgPreload.style.height =pageCanvasHeight+"px";
@@ -829,7 +855,7 @@ function clickActionsSave(e) {
                         canvas.style.width = pageCanvasWidth+"px";
                       }
                     }else{//vertikal img
-                      if (pageCanvasHeight >= pageWidth-(pageWidth*20/100)) {//Картинка большего размера
+                      if (pageWidth < pageHeight) {//Картинка большего размера
                       //control Viev
                       compareRange.style.width = pageCanvasWidth+"px";
                       imgPreload.style.height = pageCanvasHeight+"px";
@@ -867,13 +893,14 @@ function clickActionsSave(e) {
                         canvas.style.width = pageCanvasHeight+"px";
                       }
                     }else{//vertikal img
-                      if (pageCanvasHeight >= pageWidth-(pageWidth*20/100)) {//Картинка большего размера
+                      if (pageWidth < pageHeight) {//Картинка большего размера
                       //control Viev
-                      imgPreload.style.width = pageCanvasWidth+"px";
-                      compareRange.style.width = pageCanvasHeight+"px";
-                      compareRange.style.height = "";
+                      imgPreload.style.height =(pageWidth-(pageWidth*20/100))+"px";
+                      imgPreload.style.width ="auto";
+                      compareRange.style.width =(pageWidth-(pageWidth*20/100))+"px";
                       //canvas
-                      canvas.style.height = pageCanvasWidth+"px";
+                      canvas.style.width =  (pageWidth-(pageWidth*20/100))+"px";
+                      canvas.style.height = "auto";
                       }else{//Картинка малого размера
                       //control Viev
                       imgPreload.style.width = pageCanvasWidth+"px";
@@ -904,8 +931,14 @@ function clickActionsSave(e) {
                         canvas.style.width = pageCanvasHeight+"px";
                       }
                     }else{//vertikal img
-                      if (pageCanvasHeight >= pageHeight) {//Картинка большего размера
-
+                      if (pageWidth < pageHeight) {//Картинка большего размера
+                      //control Viev
+                      imgPreload.style.height =(pageWidth-(pageWidth*20/100))+"px";
+                      imgPreload.style.width ="auto";
+                      compareRange.style.width =(pageWidth-(pageWidth*20/100))+"px";
+                      //canvas
+                      canvas.style.width =  (pageWidth-(pageWidth*20/100))+"px";
+                      canvas.style.height = "auto";
                       }else{//Картинка малого размера
                       //control Viev
                       imgPreload.style.width = pageCanvasWidth+"px";
@@ -934,9 +967,15 @@ function clickActionsSave(e) {
                         canvas.style.width = pageCanvasWidth+"px";
                       }
                     }else{//vertikal img
-                      if (pageCanvasHeight >= pageHeight) {//Картинка большего размера
-
-                      }else{//Картинка малого размера
+                      if (pageWidth < pageHeight) {//Картинка большего размера
+                      //control Viev
+                      compareRange.style.width = pageCanvasWidth+"px";
+                      imgPreload.style.height = pageCanvasHeight+"px";
+                      compareRange.style.height ="";
+                      //canvas
+                      canvas.style.height = pageCanvasHeight+"px";
+                      }else{//Картинка малого размера 
+                      //control Viev
                       compareRange.style.width = pageCanvasWidth+"px";
                       imgPreload.style.height = pageCanvasHeight+"px";
                       compareRange.style.height ="";
@@ -963,9 +1002,15 @@ function clickActionsSave(e) {
                         canvas.style.width = pageCanvasWidth+"px";
                       }
                     }else{//vertikal img
-                      if (pageCanvasHeight >= pageHeight) {//Картинка большего размера
-
-                      }else{//Картинка малого размера
+                      if (pageWidth < pageHeight) {//Картинка большего размера
+                      //control Viev
+                      compareRange.style.width = pageCanvasWidth+"px";
+                      imgPreload.style.height = pageCanvasHeight+"px";
+                      compareRange.style.height ="";
+                      //canvas
+                      canvas.style.height = pageCanvasHeight+"px";
+                      }else{//Картинка малого размера 
+                      //control Viev
                       compareRange.style.width = pageCanvasWidth+"px";
                       imgPreload.style.height = pageCanvasHeight+"px";
                       compareRange.style.height ="";
