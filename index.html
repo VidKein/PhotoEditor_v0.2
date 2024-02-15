@@ -481,7 +481,7 @@ function initImg() {
     numHeight.value = img.height;
     //приводим размер холста к соответствуюшему размеру экрана
       if(img.width > img.height){//horizontal img
-          if (img.width >= pageWidth-(pageWidth*20/100)) {
+          if (img.width >= pageWidth-(pageWidth*20/100)) {//big imagen
               //canvas
               canvas.style.width = (pageWidth-(pageWidth*20/100))+"px";
               canvas.style.height = "auto"; 
@@ -507,7 +507,7 @@ function initImg() {
               pageCanvasHeight = document.getElementById("canvasResult").offsetHeight;
             } 
         }else if(img.width < img.height){//vertical img
-          if (pageWidth <= pageHeight) {
+          if (pageWidth <= pageHeight) {//big imagen
               //canvas
               canvas.style.width = (pageWidth-(pageWidth*20/100))+"px";
               canvas.style.height = ""; 
@@ -808,9 +808,13 @@ function clickActionsSave(e) {
           let rozdil = tabLinksEditFoto.children[i];
           if (rozdil.id == "editColor") {
             let podrozdil = rozdil.children;
-            for (let i = 0; i < podrozdil.length; i++) {            
+            for (let i = 0; i < podrozdil.length; i++) {         
               if (podrozdil[i].id) {
-                clicks[podrozdil[i].getElementsByTagName('input')[0].id] = podrozdil[i].getElementsByTagName('input')[0].value;
+                if (podrozdil[i].getElementsByTagName('input')[1].value) {
+                  clicks[podrozdil[i].getElementsByTagName('input')[0].id] = podrozdil[i].getElementsByTagName('input')[1].value;
+                }else{
+                  clicks[podrozdil[i].getElementsByTagName('input')[0].id] = podrozdil[i].getElementsByTagName('input')[0].value;
+                }
               }
             }
           }     
@@ -841,7 +845,7 @@ function clickActionsSave(e) {
                     flipHorizontal = 1;
                     //Изменяем положение и размер controlView
                     if(pageCanvasWidth > pageCanvasHeight){//horizontal img
-                      if (pageWidth >= pageHeight) {//Картинка большего размера
+                      if (pageWidth > pageHeight) {//Расширенный экран
                         //control Viev
                         imgPreload.style.width =  pageCanvasWidth+"px";
                         imgPreload.style.height =pageCanvasHeight+"px";
@@ -850,24 +854,28 @@ function clickActionsSave(e) {
                         //canvas 
                         canvas.style.width =  pageCanvasWidth+"px";
                         canvas.style.height = pageCanvasHeight+"px";
-                      }else{//Картинка малого размера
+                      }else{//Суженный экран
+                        //control Viev
                         compareRange.style.width = pageCanvasWidth+"px";
+                        //canvas
                         canvas.style.width = pageCanvasWidth+"px";
                       }
                     }else{//vertikal img
-                      if (pageWidth < pageHeight) {//Картинка большего размера
+                      if (pageWidth < pageHeight) {//Суженный экран
                       //control Viev
                       compareRange.style.width = pageCanvasWidth+"px";
                       imgPreload.style.height = pageCanvasHeight+"px";
                       compareRange.style.height ="";
                       //canvas
+                      canvas.style.width = "";
                       canvas.style.height = pageCanvasHeight+"px";
-                      }else{//Картинка малого размера 
+                      }else{//Расширенный экран
                       //control Viev
                       compareRange.style.width = pageCanvasWidth+"px";
                       imgPreload.style.height = pageCanvasHeight+"px";
                       compareRange.style.height ="";
                       //canvas
+                      canvas.style.width = "";
                       canvas.style.height = pageCanvasHeight+"px";
                       }
                     }
@@ -878,7 +886,7 @@ function clickActionsSave(e) {
                     flipVertical = 1;
                     //Изменяем положение и размер controlView
                     if(pageCanvasWidth > pageCanvasHeight){//horizontal img
-                      if (pageCanvasWidth >= pageHeight) {//Картинка большего размера
+                      if (pageCanvasWidth > pageHeight) {//Расширенный экран
                         //control Viev
                         imgPreload.style.width = pageHeight+"px";
                         imgPreload.style.height = pageHeight*pageCanvasHeight/pageCanvasWidth+"px";
@@ -887,13 +895,14 @@ function clickActionsSave(e) {
                         //canvas 
                         canvas.style.width = pageHeight*pageCanvasHeight/pageCanvasWidth+"px";
                         canvas.style.height = pageHeight+"px";
-                      } else {//Картинка малого размера
+                      } else {//Суженный экран
+                        //control Viev
                         compareRange.style.width = pageCanvasHeight+"px";
                         //canvas 
                         canvas.style.width = pageCanvasHeight+"px";
                       }
                     }else{//vertikal img
-                      if (pageWidth < pageHeight) {//Картинка большего размера
+                      if (pageWidth < pageHeight) {//Суженный экран
                       //control Viev
                       imgPreload.style.height =(pageWidth-(pageWidth*20/100))+"px";
                       imgPreload.style.width ="auto";
@@ -901,7 +910,7 @@ function clickActionsSave(e) {
                       //canvas
                       canvas.style.width =  (pageWidth-(pageWidth*20/100))+"px";
                       canvas.style.height = "auto";
-                      }else{//Картинка малого размера
+                      }else{//Расширенный экран
                       //control Viev
                       imgPreload.style.width = pageCanvasWidth+"px";
                       compareRange.style.width = pageCanvasHeight+"px";
@@ -917,7 +926,7 @@ function clickActionsSave(e) {
                     flipVertical = 1;
                     //Изменяем положение и размер controlView
                     if(pageCanvasWidth > pageCanvasHeight){//horizontal img
-                      if (pageCanvasWidth >= pageHeight) {//Картинка большего размера
+                      if (pageCanvasWidth > pageHeight) {//Расширенный экран
                         //control Viev
                         imgPreload.style.width = pageHeight+"px";
                         imgPreload.style.height = pageHeight*pageCanvasHeight/pageCanvasWidth+"px";
@@ -926,12 +935,14 @@ function clickActionsSave(e) {
                         //canvas 
                         canvas.style.width = pageHeight*pageCanvasHeight/pageCanvasWidth+"px";
                         canvas.style.height = pageHeight+"px";
-                      } else {//Картинка малого размера
+                      } else {//Суженный экран
+                        //control Viev
                         compareRange.style.width = pageCanvasHeight+"px";
+                        //canvas
                         canvas.style.width = pageCanvasHeight+"px";
                       }
                     }else{//vertikal img
-                      if (pageWidth < pageHeight) {//Картинка большего размера
+                      if (pageWidth < pageHeight) {//Суженный экран
                       //control Viev
                       imgPreload.style.height =(pageWidth-(pageWidth*20/100))+"px";
                       imgPreload.style.width ="auto";
@@ -939,7 +950,7 @@ function clickActionsSave(e) {
                       //canvas
                       canvas.style.width =  (pageWidth-(pageWidth*20/100))+"px";
                       canvas.style.height = "auto";
-                      }else{//Картинка малого размера
+                      }else{//Расширенный экран
                       //control Viev
                       imgPreload.style.width = pageCanvasWidth+"px";
                       compareRange.style.width = pageCanvasHeight+"px";
@@ -954,7 +965,7 @@ function clickActionsSave(e) {
                     flipHorizontal = -1;
                     //Изменяем положение и размер controlView
                     if(pageCanvasWidth > pageCanvasHeight){//horizontal img
-                      if (pageCanvasWidth >= pageHeight) {//Картинка большего размера
+                      if (pageCanvasWidth > pageHeight) {//Расширенный экран
                         //control Viev
                         imgPreload.style.width =  pageCanvasWidth+"px";
                         imgPreload.style.height =pageCanvasHeight+"px";
@@ -962,19 +973,21 @@ function clickActionsSave(e) {
                         compareRange.style.height = ""; 
                         canvas.style.width =  pageCanvasWidth+"px";
                         canvas.style.height = pageCanvasHeight+"px";
-                      } else {//Картинка малого размера
+                      } else {//Суженный экран
+                        //control Viev
                         compareRange.style.width = pageCanvasWidth+"px";
+                        //canvas
                         canvas.style.width = pageCanvasWidth+"px";
                       }
                     }else{//vertikal img
-                      if (pageWidth < pageHeight) {//Картинка большего размера
+                      if (pageWidth < pageHeight) {//Суженный экран
                       //control Viev
                       compareRange.style.width = pageCanvasWidth+"px";
                       imgPreload.style.height = pageCanvasHeight+"px";
                       compareRange.style.height ="";
                       //canvas
                       canvas.style.height = pageCanvasHeight+"px";
-                      }else{//Картинка малого размера 
+                      }else{//Расширенный экран 
                       //control Viev
                       compareRange.style.width = pageCanvasWidth+"px";
                       imgPreload.style.height = pageCanvasHeight+"px";
@@ -989,27 +1002,30 @@ function clickActionsSave(e) {
                     flipHorizontal = -1;
                     //Изменяем положение и размер controlView
                     if(pageCanvasWidth > pageCanvasHeight){//horizontal img
-                      if (pageCanvasWidth >= pageHeight) {//Картинка большего размера
+                      if (pageCanvasWidth > pageHeight) {//Расширенный экран
                         //control Viev
                         imgPreload.style.width =  pageCanvasWidth+"px";
-                        imgPreload.style.height =pageCanvasHeight+"px";
+                        imgPreload.style.height = pageCanvasHeight+"px";
                         compareRange.style.width =  pageCanvasWidth+"px";
                         compareRange.style.height = ""; 
+                        //canvas
                         canvas.style.width =  pageCanvasWidth+"px";
                         canvas.style.height = pageCanvasHeight+"px";
-                      } else {//Картинка малого размера
+                      } else {//Суженный экран
+                        //control Viev
                         compareRange.style.width = pageCanvasWidth+"px";
+                        //canvas
                         canvas.style.width = pageCanvasWidth+"px";
                       }
                     }else{//vertikal img
-                      if (pageWidth < pageHeight) {//Картинка большего размера
+                      if (pageWidth < pageHeight) {////Суженный экран
                       //control Viev
                       compareRange.style.width = pageCanvasWidth+"px";
                       imgPreload.style.height = pageCanvasHeight+"px";
                       compareRange.style.height ="";
                       //canvas
                       canvas.style.height = pageCanvasHeight+"px";
-                      }else{//Картинка малого размера 
+                      }else{//Расширенный экран 
                       //control Viev
                       compareRange.style.width = pageCanvasWidth+"px";
                       imgPreload.style.height = pageCanvasHeight+"px";
@@ -1023,7 +1039,7 @@ function clickActionsSave(e) {
               if (podrozdil.getElementsByTagName('input')[i].id == "degrees") {
                 clicks.degrees = podrozdil.getElementsByTagName('input')[i].value;
                 //Управление controlView
-                if (podrozdil.getElementsByTagName('input')[i].value > 0) {
+                if (podrozdil.getElementsByTagName('input')[i].value > 0  || podrozdil.getElementsByTagName('input')[i].value < 0) {
                     //Изменяем положение Предкартинки
                     rotateImg = rotateImg === Math.sign(podrozdil.getElementsByTagName('input')[i].value) ? podrozdil.getElementsByTagName('input')[i].value : -podrozdil.getElementsByTagName('input')[i].value;
                     flipVertical = 1;
@@ -1033,7 +1049,11 @@ function clickActionsSave(e) {
                     const sinTheta = Math.sin(podrozdil.getElementsByTagName('input')[i].value* (Math.PI / 180));
                     //Расчет изменяюшейся ширины и высоты
                     const newWidth = Math.round(Math.abs(pageCanvasWidth * cosTheta) + Math.abs(pageCanvasHeight * sinTheta));
+                    //control Viev
                     compareRange.style.width = newWidth+"px";
+                    //canvas
+                    canvas.style.width = newWidth+"px";
+                    canvas.style.height = "";
                 }
               }
             }

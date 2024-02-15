@@ -18,7 +18,6 @@ Functionality is realized:
 - zoom display when zooming
 
 :( Errors detected during testing  :(-->
-- Number field on the "Color" panel does not work correctly. Changes only when changing shooters.
 - The "Zoom+Move" function works incorrectly after performing the "Resize+Rotate" function. The picture is blended.  
 
 Improve
