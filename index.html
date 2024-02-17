@@ -43,13 +43,14 @@
       border: 1px solid #cccccc;
       border-radius: 2px;
       background: #F7F7F7;
-      height: 14rem;
       overflow: auto;
-      padding: 5px;
+      padding: 0.2rem 0.1rem;
+      height: 12rem;
     }
     #resize{
       text-align: center;
     }
+    hr{margin: 0.3rem;}
 
     /*Photo block*/
     .fotoBlock{   
@@ -179,6 +180,26 @@
        padding: 5px;
        background-color: red;     
        }
+    .histogramInfo{
+      border: 1px solid #cccccc;
+      border-radius: 2px;
+      background: #F7F7F7;
+      cursor: pointer;
+    }
+    .histogramInfo::after{
+      content: "\25BC";
+      display: block;
+      padding: 0 5px 0 5px;
+      position: relative;
+      float: right;
+    }
+    .histogramInfo.active::after {
+      content: "\25B2";
+      display: block;
+      padding: 0 5px 0 5px;
+      position: relative;
+      float: right;
+    }
     #canvasHistogram{
       width: 100%;     
       border: 1px solid #000;
@@ -200,6 +221,15 @@
       background-color: #F7F7F7;
     }
     #inputPhoto{width: 100%;}
+    .rangeEditColor{
+      display: flex;
+    }
+    #rangeContrast, #rangeBrightness, #rangeSaturation, #rangeSharp{
+      width: 80%;
+    }
+    #valueContrast, #valueBrightness, #valueSaturation, #valueSharp{
+      width: 20%;
+    }
     /*Отображения масштаба*/
     .scalrImg{
       position: absolute;
@@ -270,7 +300,33 @@
   opacity: 0;
 }
 */
-
+/*Media запрос*/
+@media screen and (min-width: 875px){
+  .minMonitor{display: none;}
+}
+@media screen and (max-width: 875px){
+  .maxMonitor{display: none;}
+}
+@media screen and (max-height: 470px){
+  .editFoto [name = content]{
+      height: auto;
+    }
+    hr{
+      margin: 0.1rem;
+    }
+    #scaleVersion{
+      width: 100%;
+    }
+    .editColor p{
+      font-size: 0.8rem;
+    }
+    .histogram label{
+      font-size: 0.8rem;
+    }
+    .editBlock p{
+      font-size: 0.8rem;
+    }
+}
 </style>
 </head>
 <body>
@@ -306,33 +362,42 @@
     </div>
 
     <div class="editBlock">
-        <p>Histogram</p>
-
+        
+        <p id="histogramInfo" class="histogramInfo">Histogram</p>
         <div class="histogram">
           <label>
-            <input name="rType" type="radio" id="typeValue"  checked/> Black-white
+          <input name="rType" type="radio" id="typeValue"  checked/> b/w
           </label>
           <label>
-            <input name="rType" type="radio" /> Color
-          </label>        
+          <input name="rType" type="radio" /> col
+          </label>    
+          <canvas id="canvasHistogram" width="256" height="150"></canvas>    
         </div>
 
-        <canvas id="canvasHistogram" width="256" height="150"></canvas>
         <p>For select custom image:</p>
         <input id="inputPhoto" type="file"/>
+
+        
                   <h3>Edit photo</h3>
-                    <ul>
+                  <!--MAX-->
+                    <ul class="maxMonitor">
                       <li><abbr class="links" onclick="openMenu(event, 'editColor')" id="startEditColor" title="edit color">Color</abbr></li>
                       <li><abbr class="links" onclick="openMenu(event, 'resize')"  title="resize">Resiz</abbr></li>
                       <li><abbr class="links" onclick="openMenu(event, 'rotate')" title="rotate">Rotate</abbr></li>                  
                     </ul>
+                  <!--MIN-->
+                  <ul class="minMonitor">
+                    <li><abbr class="links" onclick="openMenu(event, 'editColor')" id="startEditColor" title="edit color"><img src="./icons/color.svg" alt=""></abbr></li>
+                    <li><abbr class="links" onclick="openMenu(event, 'resize')"  title="resize"><img src="./icons/resiz.svg" alt=""></abbr></li>
+                    <li><abbr class="links" onclick="openMenu(event, 'rotate')" title="rotate"><img src="./icons/rotate.svg" alt=""></abbr></li>                  
+                  </ul>  
                   <div class="editFoto" id="editFoto">  
 
                     <div class="editColor" id="editColor" name="content">     
 
                       <div class="links" id="contrast">
                         <p>Contrast</p>
-                        <label>
+                        <label class="rangeEditColor">
                           <input id="rangeContrast" type="range" name="contrast" min="-255" max="255" value="0" /> 
                           <input id="valueContrast" type="number" name="number" min="-255" max="255" value="0"/>   
                         </label>
@@ -340,7 +405,7 @@
                       
                       <div class="links" id="brightness">
                         <p>Brightness</p>
-                        <label>
+                        <label class="rangeEditColor">
                           <input id="rangeBrightness" type="range" name="brightness" min="-255" max="255" value="0" />
                           <input id="valueBrightness" type="number" name="number" min="-255" max="255" value="0"/>    
                         </label>
@@ -349,7 +414,7 @@
                     
                       <div class="links" id="saturation">
                         <p>Saturation</p>
-                        <label>
+                        <label class="rangeEditColor">
                           <input id="rangeSaturation" type="range"  name="saturation" min="-255" max="255" value="0" />
                           <input id="valueSaturation" type="number" name="number" min="-255" max="255" value="0"/>  
                         </label>                
@@ -358,7 +423,7 @@
               
                       <div class="links" id="sharp">
                         <p>Sharp</p>
-                        <label>
+                        <label class="rangeEditColor">
                           <input id="rangeSharp" type="range"  name="sharp" min="0" max="100" step="0.01" value="0" /> 
                           <input id="valueSharp" type="number" name="number" min="0.1" max="100" step="1" value="0"/>          
                         </label>
@@ -436,6 +501,9 @@ let compareRange = document.getElementById("compareRange");
 let valueCompareRange = 50;
 //ZOOM
 let loaderZoomText = document.getElementById('scalrImg'); 
+//histogram
+let histograms = document.querySelector(".histogram");
+let histogramInfo = document.getElementById("histogramInfo");
 //data collection END
 
 //loadImg
@@ -563,6 +631,15 @@ function initImg() {
 //loadImg END
 
 //Meny
+//histogramInfo
+histogramInfo.addEventListener("click",()=>{
+  histogramInfo.classList.toggle("active");
+if (histogramInfo.className == "histogramInfo active") {
+  histograms.style.display = "none";
+} else {
+  histograms.style.display = "block";
+}
+})
 //functional button EditionMenu
 function openMenu(event, blockName) {
     //Declare all variables
@@ -665,7 +742,7 @@ function zoomPlus() {
   x: Math.floor((canvas.width-img.width*scale)/2) ,
   y: Math.floor((canvas.height-img.height*scale)/2)};
   loaderZoomText.style = "display: block";
-  setTimeout(loaderZoomScale,1200);
+  setTimeout(loaderZoomScale,1500);
   clickActionsSave();
 };
 //Удаление
@@ -675,7 +752,7 @@ function zoomMinus() {
   x: Math.floor((canvas.width-img.width*scale)/2) ,
   y: Math.floor((canvas.height-img.height*scale)/2)};
   loaderZoomText.style = "display: block";
-  setTimeout(loaderZoomScale,1200);
+  setTimeout(loaderZoomScale,1500);
   clickActionsSave();
 };
 //Отключение текста отображения Масштаба
@@ -844,7 +921,7 @@ function clickActionsSave(e) {
                     flipVertical = 1;
                     flipHorizontal = 1;
                     //Изменяем положение и размер controlView
-                    if(pageCanvasWidth > pageCanvasHeight){//horizontal img
+                    if(pageCanvasWidth > pageCanvasHeight || pageCanvasWidth == pageCanvasHeight){//horizontal img
                       if (pageWidth > pageHeight) {//Расширенный экран
                         //control Viev
                         imgPreload.style.width =  pageCanvasWidth+"px";
@@ -853,7 +930,7 @@ function clickActionsSave(e) {
                         compareRange.style.height = ""; 
                         //canvas 
                         canvas.style.width =  pageCanvasWidth+"px";
-                        canvas.style.height = pageCanvasHeight+"px";
+                        canvas.style.height = "";
                       }else{//Суженный экран
                         //control Viev
                         compareRange.style.width = pageCanvasWidth+"px";
@@ -885,7 +962,7 @@ function clickActionsSave(e) {
                     flipHorizontal = 1;
                     flipVertical = 1;
                     //Изменяем положение и размер controlView
-                    if(pageCanvasWidth > pageCanvasHeight){//horizontal img
+                    if(pageCanvasWidth > pageCanvasHeight || pageCanvasWidth == pageCanvasHeight){//horizontal img
                       if (pageCanvasWidth > pageHeight) {//Расширенный экран
                         //control Viev
                         imgPreload.style.width = pageHeight+"px";
@@ -925,7 +1002,7 @@ function clickActionsSave(e) {
                     flipHorizontal = -1;
                     flipVertical = 1;
                     //Изменяем положение и размер controlView
-                    if(pageCanvasWidth > pageCanvasHeight){//horizontal img
+                    if(pageCanvasWidth > pageCanvasHeight || pageCanvasWidth == pageCanvasHeight){//horizontal img
                       if (pageCanvasWidth > pageHeight) {//Расширенный экран
                         //control Viev
                         imgPreload.style.width = pageHeight+"px";
@@ -964,7 +1041,7 @@ function clickActionsSave(e) {
                     rotateImg = 180;
                     flipHorizontal = -1;
                     //Изменяем положение и размер controlView
-                    if(pageCanvasWidth > pageCanvasHeight){//horizontal img
+                    if(pageCanvasWidth > pageCanvasHeight || pageCanvasWidth == pageCanvasHeight){//horizontal img
                       if (pageCanvasWidth > pageHeight) {//Расширенный экран
                         //control Viev
                         imgPreload.style.width =  pageCanvasWidth+"px";
@@ -1028,8 +1105,8 @@ function clickActionsSave(e) {
                       }else{//Расширенный экран 
                       //control Viev
                       compareRange.style.width = pageCanvasWidth+"px";
-                      imgPreload.style.height = pageCanvasHeight+"px";
                       compareRange.style.height ="";
+                      imgPreload.style.height = pageCanvasHeight+"px";
                       //canvas
                       canvas.style.height = pageCanvasHeight+"px";
                       }
@@ -1049,11 +1126,18 @@ function clickActionsSave(e) {
                     const sinTheta = Math.sin(podrozdil.getElementsByTagName('input')[i].value* (Math.PI / 180));
                     //Расчет изменяюшейся ширины и высоты
                     const newWidth = Math.round(Math.abs(pageCanvasWidth * cosTheta) + Math.abs(pageCanvasHeight * sinTheta));
-                    //control Viev
-                    compareRange.style.width = newWidth+"px";
-                    //canvas
-                    canvas.style.width = newWidth+"px";
-                    canvas.style.height = "";
+                    const newHeight = Math.round(Math.abs(pageCanvasWidth * sinTheta) + Math.abs(pageCanvasHeight * cosTheta));
+                    if (newHeight > pageHeight) {
+                        //canvas
+                        canvas.style.width = "";    
+                        canvas.style.height = pageHeight+"px";   
+                      } else {
+                        //control Viev
+                        compareRange.style.width = newWidth+"px";
+                        //canvas
+                        canvas.style.width = newWidth+"px";
+                        canvas.style.height = "";
+                    }
                 }
               }
             }
@@ -1121,7 +1205,6 @@ function clickActionsSave(e) {
 function applyFilter(){
   imgPreload.style.transform = `rotate(${rotateImg}deg) scale(${flipHorizontal}, ${flipVertical})`;
 };
-
 //Meny END
 
 //FUNCTIONAL
@@ -1527,13 +1610,12 @@ console.log(' Время выполнения функции '+ clickItem +' : '
 //Собираем информацию с Canvas
 function getImage() {
   canvas.width = img.width;
-  canvas.height = img.height; 
-  document.getElementById("scalrImg").innerHTML = "<span class = 'anime'>Масштаб: "+Math.floor(scale*100)+" % </span>"
+  canvas.height = img.height;
+  document.getElementById("scalrImg").innerHTML = "<span class = 'anime'>Scale: "+Math.floor(scale*100)+" % </span>"
   ctx.drawImage(img, translatePos.x , translatePos.y, canvas.width*scale, canvas.height*scale);
   //Передаем информацию в функцию для редоктирования картинки  
   return ctx.getImageData(0, 0, canvas.width, canvas.height);      
 }
-
 //Собираем информацию с Canvas после внесения изменений
 function getImageSave() {
     //Передаем информацию в функцию для редоктирования картинки
