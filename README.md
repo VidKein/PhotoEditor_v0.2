@@ -19,7 +19,4 @@ Functionality is realized:
 
 :( Errors detected during testing  :(-->
 - The "Zoom+Move" function works incorrectly after performing the "Resize+Rotate" function. The picture is blended.  
-
-Improve
 - Zoom display.
-- Connection between "Zoom" and "Move"....

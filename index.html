@@ -705,11 +705,21 @@ for (let i = 0; i < leftMiddleArea.childNodes.length; i++) {
       if (nameLeftPanel == "editColor" && e.target.id == "controlView") {
         controlView();
         leftMiddleArea.childNodes[i].classList.toggle("activeFunction");
+        if (leftMiddleArea.childNodes[i].className == "elementLeftPanel activeFunction") {
+          document.getElementById("moveHand").style = "pointer-events : none; background-color: gray;";
+        } else {
+          document.getElementById("moveHand").style = "pointer-events : auto; background-color: whate;";
+        }
       } else {
         switch (e.target.id) {
         case "moveHand":
           moveHand();
           leftMiddleArea.childNodes[i].classList.toggle("activeFunction");
+          if (leftMiddleArea.childNodes[i].className == "elementLeftPanel activeFunction") {
+          document.getElementById("controlView").style = "pointer-events : none; background-color: gray;";
+          } else {
+            document.getElementById("controlView").style = "pointer-events : auto; background-color: whate;";
+          }
            break;
         case "zoomPlus": 
           zoomPlus();
